@@ -8,6 +8,9 @@
 # Java class files
 *.class
 
+# Google Maps API credentials
+busao-android/app/src/main/res/values/google_maps_api.xml
+
 # Generated files
 bin/
 gen/
@@ -28,6 +31,7 @@ proguard/
 
 # Android Studio Navigation editor temp files
 .navigation/
+.idea/
 
 # Android Studio captures folder
 captures/
