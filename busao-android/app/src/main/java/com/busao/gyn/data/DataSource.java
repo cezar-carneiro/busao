@@ -1,7 +1,7 @@
-package com.busao.gyn.repository;
+package com.busao.gyn.data;
 
 import java.util.List;
-import android.content.Context;
+
 import android.database.sqlite.SQLiteDatabase;
 
 /**

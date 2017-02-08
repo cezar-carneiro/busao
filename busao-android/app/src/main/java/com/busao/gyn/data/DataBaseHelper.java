@@ -1,4 +1,4 @@
-package com.busao.gyn.repository;
+package com.busao.gyn.data;
 
 import android.content.Context;
 import android.database.SQLException;

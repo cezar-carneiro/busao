@@ -6,9 +6,10 @@ import android.support.v4.content.Loader;
 /**
  * Created by cezar on 23/01/17.
  */
-public abstract class ContentChangingTask<T1, T2, T3> extends
-        AsyncTask<T1, T2, T3> {
-    private Loader<?> loader=null;
+public abstract class ContentChangingTask<T1, T2, T3> extends AsyncTask<T1, T2, T3> {
+
+    private Loader<?> loader;
+
     ContentChangingTask(Loader<?> loader) {
         this.loader=loader;
     }

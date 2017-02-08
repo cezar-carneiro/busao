@@ -1,4 +1,4 @@
-package com.busao.gyn;
+package com.busao.gyn.data;
 
 import java.util.Collection;
 

@@ -5,7 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.busao.gyn.stops.StopListFragment;
+import com.busao.gyn.stops.list.StopListFragment;
+import com.busao.gyn.stops.map.OnMapReady;
 import com.google.android.gms.maps.SupportMapFragment;
 
 /**

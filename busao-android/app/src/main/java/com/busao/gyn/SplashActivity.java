@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.busao.gyn.repository.DataBaseHelper;
+import com.busao.gyn.data.DataBaseHelper;
 
 import java.io.IOException;
 

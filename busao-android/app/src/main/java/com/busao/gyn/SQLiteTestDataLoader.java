@@ -2,7 +2,8 @@ package com.busao.gyn;
 
 import android.content.Context;
 
-import com.busao.gyn.repository.DataSource;
+import com.busao.gyn.data.AbstractDataLoader;
+import com.busao.gyn.data.DataSource;
 import com.busao.gyn.stops.BusStop;
 
 import java.util.List;

@@ -1,21 +1,20 @@
-package com.busao.gyn;
+package com.busao.gyn.stops.map;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.location.Location;
+import android.view.LayoutInflater;
+import android.view.View;
 
-import com.busao.gyn.repository.DataBaseHelper;
-import com.busao.gyn.repository.BusStopDataSource;
+import com.busao.gyn.R;
+import com.busao.gyn.data.DataBaseHelper;
+import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.stops.BusStop;
-import com.busao.gyn.util.DrawableUtils;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -64,6 +63,18 @@ public class OnMapReady implements OnMapReadyCallback {
         this.map.getUiSettings().setZoomControlsEnabled(true);
         this.map.getUiSettings().setCompassEnabled(true);
         this.map.setMyLocationEnabled(true);
+        this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                View v = LayoutInflater.from(context).inflate(R.layout.stop_list_item, null, false);
+                return v;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
         map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 
             @Override

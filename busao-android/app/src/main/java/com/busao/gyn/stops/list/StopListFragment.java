@@ -1,4 +1,4 @@
-package com.busao.gyn.stops;
+package com.busao.gyn.stops.list;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,7 +24,7 @@ public class StopListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.social_layout,null);
+        View view = inflater.inflate(R.layout.bus_stops_list_fragment,null);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.stops_recycler_view);
 
@@ -37,7 +37,7 @@ public class StopListFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new StopsRecyclerViewAddapter(new String[]{"0011", "0112", "6969", "8765", "0069", "0333", "0666", "12345"});
+        mAdapter = new StopsRecyclerViewAddapter(null);
         mRecyclerView.setAdapter(mAdapter);
 
 
