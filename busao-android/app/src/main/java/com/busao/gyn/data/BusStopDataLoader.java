@@ -1,9 +1,7 @@
-package com.busao.gyn;
+package com.busao.gyn.data;
 
 import android.content.Context;
 
-import com.busao.gyn.data.AbstractDataLoader;
-import com.busao.gyn.data.DataSource;
 import com.busao.gyn.stops.BusStop;
 
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
  * Created by cezar on 23/01/17.
  */
 
-public class SQLiteTestDataLoader extends AbstractDataLoader<List> {
+public class BusStopDataLoader extends AbstractDataLoader<List<BusStop>> {
     private DataSource mDataSource;
     private String mSelection;
     private String[] mSelectionArgs;
@@ -21,7 +19,7 @@ public class SQLiteTestDataLoader extends AbstractDataLoader<List> {
     private String mHaving;
     private String mOrderBy;
 
-    public SQLiteTestDataLoader(Context context, DataSource dataSource, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+    public BusStopDataLoader(Context context, DataSource dataSource, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
         super(context);
         mDataSource = dataSource;
         mSelection = selection;
@@ -32,10 +30,11 @@ public class SQLiteTestDataLoader extends AbstractDataLoader<List> {
     }
 
     @Override
-    protected List buildList() {
+    protected List<BusStop> buildList() {
         List testList = mDataSource.read();
         return testList;
     }
+
     public void insert(BusStop entity) {
         new InsertTask(this).execute(entity);
     }
@@ -45,8 +44,9 @@ public class SQLiteTestDataLoader extends AbstractDataLoader<List> {
     public void delete(BusStop entity) {
         new DeleteTask(this).execute(entity);
     }
+
     private class InsertTask extends ContentChangingTask<BusStop, Void, Void> {
-        InsertTask(SQLiteTestDataLoader loader) {
+        InsertTask(BusStopDataLoader loader) {
             super(loader);
         }
         @Override
@@ -56,7 +56,7 @@ public class SQLiteTestDataLoader extends AbstractDataLoader<List> {
         }
     }
     private class UpdateTask extends ContentChangingTask<BusStop, Void, Void> {
-        UpdateTask(SQLiteTestDataLoader loader) {
+        UpdateTask(BusStopDataLoader loader) {
             super(loader);
         }
 
@@ -67,7 +67,7 @@ public class SQLiteTestDataLoader extends AbstractDataLoader<List> {
         }
     }
     private class DeleteTask extends ContentChangingTask<BusStop, Void, Void> {
-        DeleteTask(SQLiteTestDataLoader loader) {
+        DeleteTask(BusStopDataLoader loader) {
             super(loader);
         }
         @Override

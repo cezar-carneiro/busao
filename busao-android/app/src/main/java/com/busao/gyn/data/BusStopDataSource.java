@@ -2,6 +2,8 @@ package com.busao.gyn.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -65,8 +67,22 @@ public class BusStopDataSource extends DataSource<BusStop> {
 
     @Override
     public List<BusStop> read() {
-        Cursor cursor = mDatabase.query(TABLE_NAME, getAllColumns(), null,
-                null, null, null, null);
+        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
+                "\tpontos.codigoPonto,\n" +
+                "\tpontos.latitude,\n" +
+                "\tpontos.longitude,\n" +
+                "\tpontos.endereco,\n" +
+                "\tpontos.bairro,\n" +
+                "\tpontos.cidade,\n" +
+                "\tpontos.pontoReferencia,\n" +
+                "\tpontos.favorito,\n" +
+                "\tgroup_concat(pontoslinhas.codigoLinha,', ') AS linhas \n" +
+                "FROM pontos \n" +
+                "INNER JOIN pontoslinhas ON pontos.codigoPonto = pontoslinhas.codigoPonto \n" +
+                "WHERE pontos.favorito = 1\n" +
+                "GROUP BY pontos.codigoPonto\n" +
+                "LIMIT 10 ", new String[]{} );
+
         List tests = new ArrayList();
         if (cursor != null && cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -80,16 +96,28 @@ public class BusStopDataSource extends DataSource<BusStop> {
 
     @Override
     public BusStop read(Integer id){
-//        List tests = new ArrayList();
-//        if (cursor != null && cursor.moveToFirst()) {
-//            while (!cursor.isAfterLast()) {
-//                tests.add(generateObjectFromCursor(cursor));
-//                cursor.moveToNext();
-//            }
-//            cursor.close();
-//        }
-//        return tests;
-        return null;
+        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
+                "\tpontos.codigoPonto,\n" +
+                "\tpontos.latitude,\n" +
+                "\tpontos.longitude,\n" +
+                "\tpontos.endereco,\n" +
+                "\tpontos.bairro,\n" +
+                "\tpontos.cidade,\n" +
+                "\tpontos.pontoReferencia,\n" +
+                "\tpontos.favorito,\n" +
+                "\tgroup_concat(pontoslinhas.codigoLinha,', ') AS linhas \n" +
+                "FROM pontos \n" +
+                "INNER JOIN pontoslinhas ON pontos.codigoPonto = pontoslinhas.codigoPonto \n" +
+                "WHERE pontos.id = ?", new String[]{ id.toString() });
+
+        BusStop stop = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            if (!cursor.isAfterLast()) {
+                stop = generateObjectFromCursor(cursor);
+            }
+            cursor.close();
+        }
+        return stop;
     }
 
     public List<BusStop> search(LatLng[] area){
@@ -175,7 +203,14 @@ public class BusStopDataSource extends DataSource<BusStop> {
         stop.setNeighborhood(cursor.getString(cursor.getColumnIndex(COLUMN_NEIGHBORHOOD)));
         stop.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_CITY)));
         stop.setReference(cursor.getString(cursor.getColumnIndex(COLUMN_REFERENCE)));
-        //stop.setFavorite(cursor.getInt(cursor.getColumnIndex(COLUMN_FAVORITE)));
+        try{
+            int favorite = cursor.getInt(cursor.getColumnIndex(COLUMN_FAVORITE));
+            if(favorite > 0) {
+                stop.setFavorite(true);
+            }
+        }catch (Exception e){
+            stop.setFavorite(false);
+        }
         stop.setBuses(cursor.getString(cursor.getColumnIndex(COLUMN_BUSES)));
 
         return stop;

@@ -10,13 +10,14 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.stops.BusStop;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by cezar on 03/01/17.
  */
 
-public class StopsRecyclerViewAddapter extends RecyclerView.Adapter<StopsRecyclerViewAddapter.ViewHolder> {
+public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecyclerViewAdapter.ViewHolder> {
 
     private List<BusStop> dataset;
 
@@ -41,19 +42,27 @@ public class StopsRecyclerViewAddapter extends RecyclerView.Adapter<StopsRecycle
         }
     }
 
-    public StopsRecyclerViewAddapter(List<BusStop> dataset) {
+    public StopsRecyclerViewAdapter(List<BusStop> dataset) {
         this.dataset = dataset;
     }
 
-    @Override
-    public StopsRecyclerViewAddapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = null;
-        if(dataset == null || dataset.size() == 0){
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_items_layout, parent, false);
-        } else {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stop_list_item, parent, false);
+    public void refresh(List<BusStop> data){
+        if(data == null) {
+            return;
         }
+        dataset.clear();
+        dataset.addAll(data);
+        notifyDataSetChanged();
+    }
 
+    public void clear(){
+        dataset.clear();
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public StopsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stop_list_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -63,11 +72,10 @@ public class StopsRecyclerViewAddapter extends RecyclerView.Adapter<StopsRecycle
         if (dataset == null || dataset.size() == 0) {
             return;
         }
-        holder.stopNumber.setText(dataset.get(position).getCode());
-        holder.streetName.setText(dataset.get(position).getCode());
-        holder.districtName.setText(dataset.get(position).getCode());
-        holder.stopDescription.setText(dataset.get(position).getCode());
-        holder.stopNumber.setText(dataset.get(position).getCode());
+        holder.stopNumber.setText(String.valueOf(dataset.get(position).getCode()));
+        holder.streetName.setText(dataset.get(position).getAddress());
+        holder.districtName.setText(dataset.get(position).getNeighborhood());
+        holder.stopDescription.setText(dataset.get(position).getReference());
 
         holder.imageFavorite.setOnClickListener(new View.OnClickListener() {
             boolean favorite = false;
@@ -95,7 +103,7 @@ public class StopsRecyclerViewAddapter extends RecyclerView.Adapter<StopsRecycle
 
     @Override
     public int getItemCount() {
-        return dataset == null ? 1 : dataset.size();
+        return dataset == null ? 0 : dataset.size();
     }
 }
 

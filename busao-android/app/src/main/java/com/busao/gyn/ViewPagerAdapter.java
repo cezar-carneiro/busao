@@ -39,7 +39,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         switch (position){
-            case 0 : return socialFragment;
+            case 0 : return (Fragment) socialFragment;
             case 1 : return supportMapFragment;
         }
 

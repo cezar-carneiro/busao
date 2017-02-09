@@ -6,10 +6,13 @@ import android.graphics.Color;
 import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.busao.gyn.R;
 import com.busao.gyn.data.DataBaseHelper;
 import com.busao.gyn.data.BusStopDataSource;
+import com.busao.gyn.data.DataSource;
 import com.busao.gyn.stops.BusStop;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Ratan on 7/29/2015.
+ * Created by cezar on 03/01/17.
  */
 public class OnMapReady implements OnMapReadyCallback {
 
@@ -66,16 +69,59 @@ public class OnMapReady implements OnMapReadyCallback {
         this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
-                View v = LayoutInflater.from(context).inflate(R.layout.stop_list_item, null, false);
-                return v;
+                return null;
             }
 
             @Override
-            public View getInfoContents(Marker marker) {
-                return null;
+            public View getInfoContents(final Marker marker) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                View v = inflater.inflate(R.layout.stop_list_item, null);
+
+                DataBaseHelper mDbHelper = new DataBaseHelper(context);
+                SQLiteDatabase mDatabase = mDbHelper.getWritableDatabase();
+                BusStopDataSource mDataSource = new BusStopDataSource(mDatabase);
+                BusStop stop = mDataSource.read(Integer.valueOf(marker.getTitle()));
+
+                mDbHelper.close();
+                mDatabase.close();
+
+                TextView stopNumber = (TextView) v.findViewById(R.id.stop_number);
+                stopNumber.setText(String.valueOf(stop.getCode()));
+                TextView streetName = (TextView) v.findViewById(R.id.street_name);
+                streetName.setText(stop.getAddress());
+                TextView districtName = (TextView) v.findViewById(R.id.district_name);
+                districtName.setText(stop.getNeighborhood());
+                TextView stopDescription = (TextView) v.findViewById(R.id.stop_description);
+                stopDescription.setText(stop.getReference());
+                ImageView imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
+
+                if(stop.getFavorite() != null && stop.getFavorite() ){
+                    imageFavorite.setImageResource(R.drawable.ic_favorite);
+                }else{
+                    imageFavorite.setImageResource(R.drawable.ic_favorite_border);
+                }
+
+                return v;
+            }
+
+        });
+        this.map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                DataBaseHelper mDbHelper = new DataBaseHelper(context);
+                SQLiteDatabase mDatabase = mDbHelper.getWritableDatabase();
+                BusStopDataSource mDataSource = new BusStopDataSource(mDatabase);
+                BusStop stop = mDataSource.read(Integer.valueOf(marker.getTitle()));
+                stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
+                mDataSource.update(stop);
+
+                mDbHelper.close();
+                mDatabase.close();
+
+                marker.showInfoWindow();
             }
         });
-        map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+        this.map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 
             @Override
             public void onMyLocationChange(Location loc) {
@@ -89,7 +135,7 @@ public class OnMapReady implements OnMapReadyCallback {
             }
         });
 
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        this.map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
                 searchLocation(latLng);
