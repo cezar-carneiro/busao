@@ -12,6 +12,9 @@ import java.util.List;
  */
 
 public class BusStopDataLoader extends AbstractDataLoader<List<BusStop>> {
+
+    public static final int ID = 1;
+
     private DataSource mDataSource;
     private String mSelection;
     private String[] mSelectionArgs;

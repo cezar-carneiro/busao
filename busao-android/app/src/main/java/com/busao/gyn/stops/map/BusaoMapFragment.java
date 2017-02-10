@@ -1,11 +1,11 @@
 package com.busao.gyn.stops.map;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
+import com.busao.gyn.data.BusStopDataLoader;
 import com.busao.gyn.data.BusStopDataSource;
-import com.busao.gyn.data.DataBaseHelper;
-import com.busao.gyn.data.DataSource;
 import com.busao.gyn.stops.BusStop;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,7 +34,7 @@ import java.util.List;
  * Created by cezar on 09/02/17.
  */
 
-public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCallback {
+public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCallback{
 
     private GoogleMap map;
     private Boolean firstZoom = true;
@@ -80,19 +79,13 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         this.map.getUiSettings().setZoomControlsEnabled(true);
         this.map.getUiSettings().setCompassEnabled(true);
         this.map.setMyLocationEnabled(true);
-        this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+        this.map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(final Marker marker) {
+            public boolean onMarkerClick(final Marker marker) {
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
                 View v = inflater.inflate(R.layout.stop_list_item, null);
 
-                BusStopDataSource mDataSource = new BusStopDataSource(getContext());
-                BusStop stop = mDataSource.read(Integer.valueOf(marker.getTitle()));
+                BusStop stop = dataSource.read(Integer.valueOf(marker.getTitle()));
 
                 TextView stopNumber = (TextView) v.findViewById(R.id.stop_number);
                 stopNumber.setText(String.valueOf(stop.getCode()));
@@ -102,7 +95,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                 districtName.setText(stop.getNeighborhood());
                 TextView stopDescription = (TextView) v.findViewById(R.id.stop_description);
                 stopDescription.setText(stop.getReference());
-                ImageView imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
+                final ImageView imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
 
                 if(stop.getFavorite() != null && stop.getFavorite() ){
                     imageFavorite.setImageResource(R.drawable.ic_favorite);
@@ -110,19 +103,25 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                     imageFavorite.setImageResource(R.drawable.ic_favorite_border);
                 }
 
-                return v;
-            }
+                imageFavorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        BusStop stop = dataSource.read(Integer.valueOf(marker.getTitle()));
+                        stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
+                        if(stop.getFavorite() != null && stop.getFavorite() ){
+                            imageFavorite.setImageResource(R.drawable.ic_favorite);
+                        }else{
+                            imageFavorite.setImageResource(R.drawable.ic_favorite_border);
+                        }
+                        dataSource.update(stop);
+                    }
+                });
 
-        });
-        this.map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                BusStopDataSource mDataSource = new BusStopDataSource(getContext());
-                BusStop stop = mDataSource.read(Integer.valueOf(marker.getTitle()));
-                stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
-                mDataSource.update(stop);
+                AlertDialog.Builder dialog= new AlertDialog.Builder(getContext());
+                dialog.setView(v);
+                dialog.show();
 
-                marker.showInfoWindow();
+                return false;
             }
         });
         this.map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -174,7 +173,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         for(BusStop stop : stops){
             MarkerOptions mo = new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
-                    .title(String.valueOf(stop.getCode()));
+                    .title(String.valueOf(stop.getId()));
             Marker marker = map.addMarker(mo);
             markers.add(marker);
         }

@@ -1,5 +1,6 @@
 package com.busao.gyn.stops.list;
 
+import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
+import com.busao.gyn.data.DataSource;
 import com.busao.gyn.stops.BusStop;
 
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.List;
 public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecyclerViewAdapter.ViewHolder> {
 
     private List<BusStop> dataset;
+    private DataSource dataSource;
+    private Loader loader;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -41,12 +45,17 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         }
     }
 
-    public StopsRecyclerViewAdapter() {
-        this(null);
+    public StopsRecyclerViewAdapter(DataSource dataSource) {
+        this(dataSource, null);
     }
 
-    public StopsRecyclerViewAdapter(List<BusStop> dataset) {
+    public StopsRecyclerViewAdapter(DataSource dataSource, List<BusStop> dataset) {
+        this.dataSource = dataSource;
         this.dataset = dataset;
+    }
+
+    public void setLoader(Loader loader){
+        this.loader = loader;
     }
 
     public void refresh(List<BusStop> data){
@@ -83,27 +92,34 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         if (dataset == null || dataset.size() == 0) {
             return;
         }
-        holder.stopNumber.setText(String.valueOf(dataset.get(position).getCode()));
-        holder.streetName.setText(dataset.get(position).getAddress());
-        holder.districtName.setText(dataset.get(position).getNeighborhood());
-        holder.stopDescription.setText(dataset.get(position).getReference());
+        final BusStop stop = dataset.get(position);
+        String code = String.valueOf(dataset.get(position).getCode());
+        if(code.length() < 4)
+            for(int i = 0; i <= 4 - code.length(); i++)
+                code= "0"+code;
+
+        holder.stopNumber.setText(code);
+        holder.streetName.setText(stop.getAddress());
+        holder.districtName.setText(stop.getNeighborhood());
+        holder.stopDescription.setText(stop.getReference());
+
+        if(stop.getFavorite() != null && stop.getFavorite()){
+            holder.imageFavorite.setImageResource(R.drawable.ic_favorite);
+        }else{
+            holder.imageFavorite.setImageResource(R.drawable.ic_favorite_border);
+        }
 
         holder.imageFavorite.setOnClickListener(new View.OnClickListener() {
-            boolean favorite = false;
-
             @Override
             public void onClick(View v) {
-                favorite = !favorite;
-                if(favorite){
-                    holder.imageFavorite.setImageResource(R.drawable.ic_favorite);
-                }else{
-                    holder.imageFavorite.setImageResource(R.drawable.ic_favorite_border);
-                }
+                stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
+                dataSource.update(stop);
+                if(loader != null)
+                    loader.reset();
             }
         });
 
         holder.imageMap.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
 

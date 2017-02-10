@@ -1,6 +1,5 @@
 package com.busao.gyn.stops.list;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,12 +16,9 @@ import android.widget.ViewSwitcher;
 import com.busao.gyn.R;
 import com.busao.gyn.data.BusStopDataLoader;
 import com.busao.gyn.data.BusStopDataSource;
-import com.busao.gyn.data.DataBaseHelper;
 import com.busao.gyn.data.DataSource;
 import com.busao.gyn.stops.BusStop;
-import com.google.android.gms.maps.SupportMapFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,11 +52,12 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
         mLayoutManager = new LinearLayoutManager(getActivity());
         stopsRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new StopsRecyclerViewAdapter();
+        dataSource = new BusStopDataSource(getContext());
+
+        mAdapter = new StopsRecyclerViewAdapter(dataSource);
         stopsRecyclerView.setAdapter(mAdapter);
 
-        dataSource = new BusStopDataSource(getContext());
-        getLoaderManager().initLoader(1, null, this);
+        getLoaderManager().initLoader(BusStopDataLoader.ID, null, this);
 
         return view;
     }
@@ -84,6 +81,7 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<List<BusStop>> loader, List<BusStop> data) {
         mAdapter.refresh(data);
+        mAdapter.setLoader(loader);
         switchViews(data);
     }
 
