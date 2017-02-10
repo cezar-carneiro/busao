@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -30,8 +31,8 @@ public class BusStopDataSource extends DataSource<BusStop> {
     public static final String COLUMN_FAVORITE = "favorito";
     public static final String COLUMN_BUSES = "linhas";
 
-    public BusStopDataSource(SQLiteDatabase database) {
-        super(database);
+    public BusStopDataSource(Context context) {
+        super(context);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class BusStopDataSource extends DataSource<BusStop> {
         if (entity == null) {
             return false;
         }
-        long result = mDatabase.insert(TABLE_NAME, null,
+        long result = database.insert(TABLE_NAME, null,
                 generateContentValuesFromObject(entity));
         return result != -1;
     }
@@ -49,7 +50,7 @@ public class BusStopDataSource extends DataSource<BusStop> {
         if (entity == null) {
             return false;
         }
-        int result = mDatabase.delete(TABLE_NAME,
+        int result = database.delete(TABLE_NAME,
                 COLUMN_ID + " = " + entity.getId(), null);
         return result != 0;
     }
@@ -59,7 +60,7 @@ public class BusStopDataSource extends DataSource<BusStop> {
         if (entity == null) {
             return false;
         }
-        int result = mDatabase.update(TABLE_NAME,
+        int result = database.update(TABLE_NAME,
                 generateContentValuesFromObject(entity), COLUMN_ID + " = "
                         + entity.getId(), null);
         return result != 0;
@@ -67,7 +68,7 @@ public class BusStopDataSource extends DataSource<BusStop> {
 
     @Override
     public List<BusStop> read() {
-        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
+        Cursor cursor = database.rawQuery("SELECT pontos.id,\n" +
                 "\tpontos.codigoPonto,\n" +
                 "\tpontos.latitude,\n" +
                 "\tpontos.longitude,\n" +
@@ -96,7 +97,7 @@ public class BusStopDataSource extends DataSource<BusStop> {
 
     @Override
     public BusStop read(Integer id){
-        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
+        Cursor cursor = database.rawQuery("SELECT pontos.id,\n" +
                 "\tpontos.codigoPonto,\n" +
                 "\tpontos.latitude,\n" +
                 "\tpontos.longitude,\n" +
@@ -121,7 +122,7 @@ public class BusStopDataSource extends DataSource<BusStop> {
     }
 
     public List<BusStop> search(LatLng[] area){
-        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
+        Cursor cursor = database.rawQuery("SELECT pontos.id,\n" +
                 "\tpontos.codigoPonto,\n" +
                 "\tpontos.latitude,\n" +
                 "\tpontos.longitude,\n" +
@@ -160,7 +161,7 @@ public class BusStopDataSource extends DataSource<BusStop> {
     }
 
     public List<BusStop> search(String input){
-        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id," +
+        Cursor cursor = database.rawQuery("SELECT pontos.id," +
                     "\tpontos.codigoPonto,\n" +
                     "\tpontos.latitude,\n" +
                     "\tpontos.longitude,\n" +

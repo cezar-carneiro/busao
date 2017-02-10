@@ -2,6 +2,7 @@ package com.busao.gyn.data;
 
 import java.util.List;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -9,10 +10,17 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public abstract class DataSource<T> {
 
-    protected SQLiteDatabase mDatabase;
+    protected SQLiteDatabase database;
+    protected DataBaseHelper dbHelper;
 
-    public DataSource(SQLiteDatabase database) {
-        mDatabase = database;
+    public DataSource(Context context) {
+        this.dbHelper = new DataBaseHelper(context);
+        this.database = dbHelper.getWritableDatabase();
+    }
+
+    public void close(){
+        this.dbHelper.close();
+        this.database.close();
     }
 
     public abstract boolean create(T entity);

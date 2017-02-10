@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.busao.gyn.stops.list.StopListFragment;
-import com.busao.gyn.stops.map.OnMapReady;
+import com.busao.gyn.stops.map.BusaoMapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 
 /**
@@ -20,17 +20,14 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private int NumbOfTabs;
     private SupportMapFragment supportMapFragment;
     private StopListFragment socialFragment;
-    private OnMapReady onMapReady;
 
     public ViewPagerAdapter(Context context, FragmentManager fm, CharSequence mTitles[]) {
         super(fm);
         this.context = context;
         this.Titles = mTitles;
         this.NumbOfTabs = mTitles.length;
-        this.onMapReady = new OnMapReady(context);
 
-        this.supportMapFragment =  SupportMapFragment.newInstance();
-        this.supportMapFragment.getMapAsync(onMapReady);
+        this.supportMapFragment = BusaoMapFragment.newInstance();
 
         this.socialFragment = new StopListFragment();
     }
@@ -39,7 +36,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         switch (position){
-            case 0 : return (Fragment) socialFragment;
+            case 0 : return socialFragment;
             case 1 : return supportMapFragment;
         }
 

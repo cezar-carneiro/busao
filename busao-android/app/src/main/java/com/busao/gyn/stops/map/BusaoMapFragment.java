@@ -4,20 +4,24 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
-import com.busao.gyn.data.DataBaseHelper;
 import com.busao.gyn.data.BusStopDataSource;
+import com.busao.gyn.data.DataBaseHelper;
 import com.busao.gyn.data.DataSource;
 import com.busao.gyn.stops.BusStop;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -28,27 +32,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by cezar on 03/01/17.
+ * Created by cezar on 09/02/17.
  */
-public class OnMapReady implements OnMapReadyCallback {
+
+public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCallback {
 
     private GoogleMap map;
     private Boolean firstZoom = true;
 
-    private Context context;
-
-    DataBaseHelper helper;
-    SQLiteDatabase database;
-    BusStopDataSource dataSource;
-
     private List<Marker> markers = new ArrayList<Marker>();
     private Circle locationCircle;
 
-    public OnMapReady(Context context) {
-        this.context = context;
-        this.helper = new DataBaseHelper(context);
-        this.database = helper.getWritableDatabase();
-        this.dataSource = new BusStopDataSource(database);
+    private BusStopDataSource dataSource;
+
+    public BusaoMapFragment(){
+        getMapAsync(this);
+    }
+
+    public static SupportMapFragment newInstance() {
+        return new BusaoMapFragment();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.dataSource = new BusStopDataSource(getContext());
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.dataSource.close();
     }
 
     /**
@@ -74,16 +88,11 @@ public class OnMapReady implements OnMapReadyCallback {
 
             @Override
             public View getInfoContents(final Marker marker) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
                 View v = inflater.inflate(R.layout.stop_list_item, null);
 
-                DataBaseHelper mDbHelper = new DataBaseHelper(context);
-                SQLiteDatabase mDatabase = mDbHelper.getWritableDatabase();
-                BusStopDataSource mDataSource = new BusStopDataSource(mDatabase);
+                BusStopDataSource mDataSource = new BusStopDataSource(getContext());
                 BusStop stop = mDataSource.read(Integer.valueOf(marker.getTitle()));
-
-                mDbHelper.close();
-                mDatabase.close();
 
                 TextView stopNumber = (TextView) v.findViewById(R.id.stop_number);
                 stopNumber.setText(String.valueOf(stop.getCode()));
@@ -108,15 +117,10 @@ public class OnMapReady implements OnMapReadyCallback {
         this.map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                DataBaseHelper mDbHelper = new DataBaseHelper(context);
-                SQLiteDatabase mDatabase = mDbHelper.getWritableDatabase();
-                BusStopDataSource mDataSource = new BusStopDataSource(mDatabase);
+                BusStopDataSource mDataSource = new BusStopDataSource(getContext());
                 BusStop stop = mDataSource.read(Integer.valueOf(marker.getTitle()));
                 stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
                 mDataSource.update(stop);
-
-                mDbHelper.close();
-                mDatabase.close();
 
                 marker.showInfoWindow();
             }
@@ -183,4 +187,5 @@ public class OnMapReady implements OnMapReadyCallback {
         LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(ll, 17), 2000, null);
     }
+
 }

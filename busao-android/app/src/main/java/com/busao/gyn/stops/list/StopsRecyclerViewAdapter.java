@@ -38,8 +38,11 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
             stopDescription = (TextView) v.findViewById(R.id.stop_description);
             imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
             imageMap = (ImageView) v.findViewById(R.id.imageMap);
-
         }
+    }
+
+    public StopsRecyclerViewAdapter() {
+        this(null);
     }
 
     public StopsRecyclerViewAdapter(List<BusStop> dataset) {
@@ -50,12 +53,20 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         if(data == null) {
             return;
         }
+        if(dataset == null) {
+            dataset = data;
+            notifyDataSetChanged();
+            return;
+        }
         dataset.clear();
         dataset.addAll(data);
         notifyDataSetChanged();
     }
 
     public void clear(){
+        if(dataset == null){
+            return;
+        }
         dataset.clear();
         notifyDataSetChanged();
     }

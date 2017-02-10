@@ -20,6 +20,7 @@ import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.data.DataBaseHelper;
 import com.busao.gyn.data.DataSource;
 import com.busao.gyn.stops.BusStop;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,7 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
 
     private StopsRecyclerViewAdapter mAdapter;
 
-    private SQLiteDatabase mDatabase;
-    private DataSource mDataSource;
-    private DataBaseHelper mDbHelper;
+    private DataSource dataSource;
 
     @Nullable
     @Override
@@ -57,18 +56,11 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
         mLayoutManager = new LinearLayoutManager(getActivity());
         stopsRecyclerView.setLayoutManager(mLayoutManager);
 
-
-        List<BusStop> stops = new ArrayList<BusStop>();
-
-        mAdapter = new StopsRecyclerViewAdapter(stops);
+        mAdapter = new StopsRecyclerViewAdapter();
         stopsRecyclerView.setAdapter(mAdapter);
 
-        mDbHelper = new DataBaseHelper(getActivity());
-        mDatabase = mDbHelper.getWritableDatabase();
-        mDataSource = new BusStopDataSource(mDatabase);
+        dataSource = new BusStopDataSource(getContext());
         getLoaderManager().initLoader(1, null, this);
-
-        switchViews(stops);
 
         return view;
     }
@@ -85,7 +77,7 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<List<BusStop>> onCreateLoader(int id, Bundle args) {
-        Loader loader = new BusStopDataLoader(getActivity(), mDataSource, null, null, null, null, null);
+        Loader loader = new BusStopDataLoader(getActivity(), dataSource, null, null, null, null, null);
         return loader;
     }
 
@@ -103,10 +95,6 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mDbHelper.close();
-        mDatabase.close();
-        mDataSource = null;
-        mDbHelper = null;
-        mDatabase = null;
+        dataSource.close();
     }
 }
