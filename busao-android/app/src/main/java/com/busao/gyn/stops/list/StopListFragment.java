@@ -16,7 +16,7 @@ import android.widget.ViewSwitcher;
 import com.busao.gyn.R;
 import com.busao.gyn.data.BusStopDataLoader;
 import com.busao.gyn.data.BusStopDataSource;
-import com.busao.gyn.data.DataSource;
+import com.busao.gyn.data.AbstractDataSource;
 import com.busao.gyn.stops.BusStop;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
 
     private StopsRecyclerViewAdapter mAdapter;
 
-    private DataSource dataSource;
+    private BusStopDataSource dataSource;
 
     @Nullable
     @Override
@@ -81,7 +81,6 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<List<BusStop>> loader, List<BusStop> data) {
         mAdapter.refresh(data);
-        mAdapter.setLoader(loader);
         switchViews(data);
     }
 

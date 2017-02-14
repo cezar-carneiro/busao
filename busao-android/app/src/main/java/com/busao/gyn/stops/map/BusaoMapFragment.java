@@ -114,6 +114,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                             imageFavorite.setImageResource(R.drawable.ic_favorite_border);
                         }
                         dataSource.update(stop);
+                        dataSource.refreshItems();
                     }
                 });
 

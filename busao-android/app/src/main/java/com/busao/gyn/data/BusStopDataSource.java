@@ -1,22 +1,20 @@
 package com.busao.gyn.data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.busao.gyn.stops.BusStop;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by cezar on 23/01/17.
  */
-public class BusStopDataSource extends DataSource<BusStop> {
+public class BusStopDataSource extends AbstractDataSource<BusStop> {
 
     public static final String TABLE_NAME = "pontos";
 

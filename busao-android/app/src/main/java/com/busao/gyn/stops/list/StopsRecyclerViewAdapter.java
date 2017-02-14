@@ -9,10 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
-import com.busao.gyn.data.DataSource;
+import com.busao.gyn.data.AbstractDataSource;
 import com.busao.gyn.stops.BusStop;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,8 +21,7 @@ import java.util.List;
 public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecyclerViewAdapter.ViewHolder> {
 
     private List<BusStop> dataset;
-    private DataSource dataSource;
-    private Loader loader;
+    private AbstractDataSource dataSource;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -45,17 +43,13 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         }
     }
 
-    public StopsRecyclerViewAdapter(DataSource dataSource) {
+    public StopsRecyclerViewAdapter(AbstractDataSource dataSource) {
         this(dataSource, null);
     }
 
-    public StopsRecyclerViewAdapter(DataSource dataSource, List<BusStop> dataset) {
+    public StopsRecyclerViewAdapter(AbstractDataSource dataSource, List<BusStop> dataset) {
         this.dataSource = dataSource;
         this.dataset = dataset;
-    }
-
-    public void setLoader(Loader loader){
-        this.loader = loader;
     }
 
     public void refresh(List<BusStop> data){
@@ -114,8 +108,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
             public void onClick(View v) {
                 stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
                 dataSource.update(stop);
-                if(loader != null)
-                    loader.reset();
+                dataSource.refreshItems();
             }
         });
 

@@ -1,50 +1,31 @@
 package com.busao.gyn.data;
 
-import java.util.Collection;
-
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 /**
  * Created by cezar on 23/01/17.
  */
-public abstract class AbstractDataLoader<E extends Collection> extends AsyncTaskLoader {
+public abstract class AbstractDataLoader<E, D extends AbstractDataSource> extends AsyncTaskLoader<E> implements AbstractDataSource.DataSourceObserver{
 
-    protected E mLastDataList = null;
+    protected D mDataSource;
 
-    protected abstract E buildList();
-
-    public AbstractDataLoader(Context context) {
+    public AbstractDataLoader(Context context, D dataSource) {
         super(context);
+        this.mDataSource = dataSource;
     }
 
-    /**
-     * Runs on a worker thread, loading in our data. Delegates the real work to
-     * concrete subclass' buildCursor() method.
-     */
     @Override
-    public E loadInBackground() {
-        return buildList();
-    }
+    abstract public E loadInBackground();
 
-    /**
-     * Runs on the UI thread, routing the results from the background thread to
-     * whatever is using the dataList.
-     */
-    public void deliverResult(E dataList) {
+    @Override
+    public void deliverResult(E data) {
         if (isReset()) {
-            // An async query came in while the loader is stopped
-            emptyDataList(dataList);
             return;
         }
-        E oldDataList = mLastDataList;
-        mLastDataList = dataList;
+
         if (isStarted()) {
-            super.deliverResult(dataList);
-        }
-        if (oldDataList != null && oldDataList != dataList
-                && oldDataList.size() > 0) {
-            emptyDataList(oldDataList);
+            super.deliverResult(data);
         }
     }
 
@@ -58,56 +39,29 @@ public abstract class AbstractDataLoader<E extends Collection> extends AsyncTask
      */
     @Override
     protected void onStartLoading() {
-        if (mLastDataList != null) {
-            deliverResult(mLastDataList);
+        // Deliver any previously loaded data immediately if available.
+        if (mDataSource.cachedItemsAvailable()) {
+            deliverResult((E) mDataSource.getCache());// FIXME: ERROR PRONE
         }
-        if (takeContentChanged() || mLastDataList == null
-                || mLastDataList.size() == 0) {
+
+        mDataSource.addContentObserver(this);
+
+        if (takeContentChanged() || !mDataSource.cachedItemsAvailable()) {
             forceLoad();
         }
     }
 
-    /**
-     * Must be called from the UI thread, triggered by a call to stopLoading().
-     */
-    @Override
-    protected void onStopLoading() {
-        // Attempt to cancel the current load task if possible.
-        cancelLoad();
-    }
-
-    /**
-     * Must be called from the UI thread, triggered by a call to cancel(). Here,
-     * we make sure our Cursor is closed, if it still exists and is not already
-     * closed.
-     */
-    public void onCanceled(E dataList) {
-        if (dataList != null && dataList.size() > 0) {
-            emptyDataList(dataList);
-        }
-    }
-
-    /**
-     * Must be called from the UI thread, triggered by a call to reset(). Here,
-     * we make sure our Cursor is closed, if it still exists and is not already
-     * closed.
-     */
     @Override
     protected void onReset() {
-        super.onReset();
-        // Ensure the loader is stopped
         onStopLoading();
-        if (mLastDataList != null && mLastDataList.size() > 0) {
-            emptyDataList(mLastDataList);
-        }
-        mLastDataList = null;
+        mDataSource.removeContentObserver(this);
     }
 
-    protected void emptyDataList(E dataList) {
-        if (dataList != null && dataList.size() > 0) {
-            for (int i = 0; i < dataList.size(); i++) {
-                dataList.remove(i);
-            }
+    @Override
+    public void onDataChanged() {
+        if (isStarted()) {
+            forceLoad();
         }
     }
+
 }

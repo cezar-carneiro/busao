@@ -11,39 +11,38 @@ import java.util.List;
  * Created by cezar on 23/01/17.
  */
 
-public class BusStopDataLoader extends AbstractDataLoader<List<BusStop>> {
+public class BusStopDataLoader extends AbstractDataLoader<List<BusStop>, BusStopDataSource> {
 
     public static final int ID = 1;
 
-    private DataSource mDataSource;
     private String mSelection;
     private String[] mSelectionArgs;
     private String mGroupBy;
     private String mHaving;
     private String mOrderBy;
 
-    public BusStopDataLoader(Context context, DataSource dataSource, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
-        super(context);
-        mDataSource = dataSource;
-        mSelection = selection;
-        mSelectionArgs = selectionArgs;
-        mGroupBy = groupBy;
-        mHaving = having;
-        mOrderBy = orderBy;
+    public BusStopDataLoader(Context context, BusStopDataSource dataSource, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        super(context, dataSource);
+        this.mSelection = selection;
+        this.mSelectionArgs = selectionArgs;
+        this.mGroupBy = groupBy;
+        this.mHaving = having;
+        this.mOrderBy = orderBy;
     }
 
     @Override
-    protected List<BusStop> buildList() {
-        List testList = mDataSource.read();
-        return testList;
+    public List<BusStop> loadInBackground() {
+        return mDataSource.read();
     }
 
     public void insert(BusStop entity) {
         new InsertTask(this).execute(entity);
     }
+
     public void update(BusStop entity) {
         new UpdateTask(this).execute(entity);
     }
+
     public void delete(BusStop entity) {
         new DeleteTask(this).execute(entity);
     }
