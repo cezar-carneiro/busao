@@ -29,7 +29,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private final Context mContext;
 
     public DataBaseHelper(Context context) {
-        super(context, DB_NAME, null, VERSION);// 1? Its database Version
+        super(context, DB_NAME, null, VERSION);// 1? Its mDatabase Version
         this.mContext = context;
         if (android.os.Build.VERSION.SDK_INT >= 17) {
             DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
@@ -45,7 +45,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             this.close();
             try {
                 copyDataBase();
-                Log.e(TAG, "createDatabase database created");
+                Log.e(TAG, "createDatabase mDatabase created");
             } catch (IOException mIOException){
                 throw new Error("ErrorCopyingDataBase");
             }

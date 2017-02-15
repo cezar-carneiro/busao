@@ -29,8 +29,24 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     public static final String COLUMN_FAVORITE = "favorito";
     public static final String COLUMN_BUSES = "linhas";
 
-    public BusStopDataSource(Context context) {
+    private static BusStopDataSource INSTANCE = null;
+
+    private BusStopDataSource(Context context) {
         super(context);
+    }
+
+    public static BusStopDataSource getInstance(Context context){
+        if(INSTANCE == null) {
+            INSTANCE = new BusStopDataSource(context);
+        }
+        return INSTANCE;
+    }
+
+    public static void destroyInstance(){
+        if(INSTANCE != null) {
+            INSTANCE.close();
+            INSTANCE = null;
+        }
     }
 
     @Override
@@ -38,7 +54,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
         if (entity == null) {
             return false;
         }
-        long result = database.insert(TABLE_NAME, null,
+        long result = mDatabase.insert(TABLE_NAME, null,
                 generateContentValuesFromObject(entity));
         return result != -1;
     }
@@ -48,7 +64,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
         if (entity == null) {
             return false;
         }
-        int result = database.delete(TABLE_NAME,
+        int result = mDatabase.delete(TABLE_NAME,
                 COLUMN_ID + " = " + entity.getId(), null);
         return result != 0;
     }
@@ -58,7 +74,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
         if (entity == null) {
             return false;
         }
-        int result = database.update(TABLE_NAME,
+        int result = mDatabase.update(TABLE_NAME,
                 generateContentValuesFromObject(entity), COLUMN_ID + " = "
                         + entity.getId(), null);
         return result != 0;
@@ -66,7 +82,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
 
     @Override
     public List<BusStop> read() {
-        Cursor cursor = database.rawQuery("SELECT pontos.id,\n" +
+        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
                 "\tpontos.codigoPonto,\n" +
                 "\tpontos.latitude,\n" +
                 "\tpontos.longitude,\n" +
@@ -79,8 +95,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
                 "FROM pontos \n" +
                 "INNER JOIN pontoslinhas ON pontos.codigoPonto = pontoslinhas.codigoPonto \n" +
                 "WHERE pontos.favorito = 1\n" +
-                "GROUP BY pontos.codigoPonto\n" +
-                "LIMIT 10 ", new String[]{} );
+                "GROUP BY pontos.codigoPonto\n", new String[]{} );
 
         List tests = new ArrayList();
         if (cursor != null && cursor.moveToFirst()) {
@@ -95,7 +110,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
 
     @Override
     public BusStop read(Integer id){
-        Cursor cursor = database.rawQuery("SELECT pontos.id,\n" +
+        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
                 "\tpontos.codigoPonto,\n" +
                 "\tpontos.latitude,\n" +
                 "\tpontos.longitude,\n" +
@@ -120,7 +135,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     }
 
     public List<BusStop> search(LatLng[] area){
-        Cursor cursor = database.rawQuery("SELECT pontos.id,\n" +
+        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
                 "\tpontos.codigoPonto,\n" +
                 "\tpontos.latitude,\n" +
                 "\tpontos.longitude,\n" +
@@ -159,7 +174,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     }
 
     public List<BusStop> search(String input){
-        Cursor cursor = database.rawQuery("SELECT pontos.id," +
+        Cursor cursor = mDatabase.rawQuery("SELECT pontos.id," +
                     "\tpontos.codigoPonto,\n" +
                     "\tpontos.latitude,\n" +
                     "\tpontos.longitude,\n" +

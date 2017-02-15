@@ -23,17 +23,17 @@ public abstract class AbstractDataSource<T> {
 
     private boolean mCacheIsDirty;
 
-    protected SQLiteDatabase database;
-    protected DataBaseHelper dbHelper;
+    protected SQLiteDatabase mDatabase;
+    protected DataBaseHelper mDatabaseHelper;
 
-    public AbstractDataSource(Context context) {
-        this.dbHelper = new DataBaseHelper(context);
-        this.database = dbHelper.getWritableDatabase();
+    protected AbstractDataSource(Context context) {
+        this.mDatabaseHelper = new DataBaseHelper(context);
+        this.mDatabase = mDatabaseHelper.getWritableDatabase();
     }
 
     public void close(){
-        this.dbHelper.close();
-        this.database.close();
+        this.mDatabaseHelper.close();
+        this.mDatabase.close();
     }
 
     public void addContentObserver(DataSourceObserver observer) {

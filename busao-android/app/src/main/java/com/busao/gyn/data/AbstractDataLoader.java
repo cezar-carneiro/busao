@@ -3,10 +3,12 @@ package com.busao.gyn.data;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
+import java.util.Collection;
+
 /**
  * Created by cezar on 23/01/17.
  */
-public abstract class AbstractDataLoader<E, D extends AbstractDataSource> extends AsyncTaskLoader<E> implements AbstractDataSource.DataSourceObserver{
+public abstract class AbstractDataLoader<E extends Collection, D extends AbstractDataSource> extends AsyncTaskLoader<E> implements AbstractDataSource.DataSourceObserver{
 
     protected D mDataSource;
 
@@ -41,7 +43,7 @@ public abstract class AbstractDataLoader<E, D extends AbstractDataSource> extend
     protected void onStartLoading() {
         // Deliver any previously loaded data immediately if available.
         if (mDataSource.cachedItemsAvailable()) {
-            deliverResult((E) mDataSource.getCache());// FIXME: ERROR PRONE
+            deliverResult((E)mDataSource.getCache());
         }
 
         mDataSource.addContentObserver(this);

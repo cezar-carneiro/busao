@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import android.widget.ViewSwitcher;
 import com.busao.gyn.R;
 import com.busao.gyn.data.BusStopDataLoader;
 import com.busao.gyn.data.BusStopDataSource;
-import com.busao.gyn.data.AbstractDataSource;
 import com.busao.gyn.stops.BusStop;
 
 import java.util.List;
@@ -51,10 +51,12 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         stopsRecyclerView.setLayoutManager(mLayoutManager);
+        stopsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        dataSource = new BusStopDataSource(getContext());
+        dataSource = BusStopDataSource.getInstance(getActivity().getApplicationContext());
 
         mAdapter = new StopsRecyclerViewAdapter(dataSource);
+
         stopsRecyclerView.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(BusStopDataLoader.ID, null, this);
@@ -92,6 +94,6 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onDestroy() {
         super.onDestroy();
-        dataSource.close();
+        BusStopDataSource.destroyInstance();
     }
 }

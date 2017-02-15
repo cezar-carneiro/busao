@@ -54,14 +54,14 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.dataSource = new BusStopDataSource(getContext());
+        this.dataSource = BusStopDataSource.getInstance(getActivity().getApplicationContext());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.dataSource.close();
+        BusStopDataSource.destroyInstance();
     }
 
     /**
