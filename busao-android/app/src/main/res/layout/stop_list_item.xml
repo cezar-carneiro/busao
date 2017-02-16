@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:text="Street Name"
                 android:textColor="@color/colorAccent"
                 android:textSize="20dp"
@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:text="District Name"
                     android:textColor="@color/colorAccent"
                     android:textSize="14dp"
@@ -109,8 +109,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:fontFamily="sans-serif"
-                android:maxLines="2"
-                android:text="003, 027, 029, 909"
+                android:maxLines="3"
+                android:text="888, 888, 888, 888"
                 android:textColor="@color/colorAccent"
                 android:textSize="14dp" />
 
