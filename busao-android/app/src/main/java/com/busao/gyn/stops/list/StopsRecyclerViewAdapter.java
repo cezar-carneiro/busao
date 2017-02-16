@@ -1,7 +1,6 @@
 package com.busao.gyn.stops.list;
 
 import android.graphics.Typeface;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +31,8 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         public TextView streetName;
         public TextView districtName;
         public TextView stopDescription;
+        public TextView cityName;
+        public TextView linesAvailable;
         public ImageView imageFavorite;
         public ImageView imageMap;
 
@@ -41,6 +42,8 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
             streetName = (TextView) v.findViewById(R.id.street_name);
             districtName = (TextView) v.findViewById(R.id.district_name);
             stopDescription = (TextView) v.findViewById(R.id.stop_description);
+            cityName = (TextView) v.findViewById(R.id.city_name);
+            linesAvailable = (TextView) v.findViewById(R.id.lines_available);
             imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
             imageMap = (ImageView) v.findViewById(R.id.imageMap);
         }
@@ -104,6 +107,10 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
             holder.stopDescription.setText(stop.getReference());
             holder.stopDescription.setTypeface(null, Typeface.NORMAL);
         }
+
+        holder.cityName.setText(stop.getCity());
+
+        holder.linesAvailable.setText(stop.getLines());
 
         if(stop.getFavorite() != null && stop.getFavorite()){
             holder.imageFavorite.setImageResource(R.drawable.ic_favorite);

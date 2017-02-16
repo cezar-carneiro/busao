@@ -27,7 +27,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     public static final String COLUMN_CITY = "cidade";
     public static final String COLUMN_REFERENCE = "pontoReferencia";
     public static final String COLUMN_FAVORITE = "favorito";
-    public static final String COLUMN_BUSES = "linhas";
+    public static final String COLUMN_LINES = "linhas";
 
     private static BusStopDataSource INSTANCE = null;
 
@@ -201,7 +201,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
 
     public String[] getAllColumns() {
         return new String[] { COLUMN_ID, COLUMN_CODE, COLUMN_LATITUDE, COLUMN_LONGITUDE, COLUMN_ADDRESS,
-                COLUMN_NEIGHBORHOOD, COLUMN_CITY, COLUMN_REFERENCE, COLUMN_FAVORITE, COLUMN_BUSES};
+                COLUMN_NEIGHBORHOOD, COLUMN_CITY, COLUMN_REFERENCE, COLUMN_FAVORITE, COLUMN_LINES};
     }
 
     public BusStop generateObjectFromCursor(Cursor cursor) {
@@ -225,7 +225,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
         }catch (Exception e){
             stop.setFavorite(false);
         }
-        stop.setBuses(cursor.getString(cursor.getColumnIndex(COLUMN_BUSES)));
+        stop.setLines(cursor.getString(cursor.getColumnIndex(COLUMN_LINES)));
 
         return stop;
     }
@@ -242,7 +242,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
         values.put(COLUMN_NEIGHBORHOOD, entity.getNeighborhood());
         values.put(COLUMN_REFERENCE, entity.getReference());
         values.put(COLUMN_FAVORITE, entity.getFavorite() ? 1 : 0);
-        //values.put(COLUMN_BUSES, entity.getBuses());
+//        values.put(COLUMN_LINES, entity.getLines());
 
         return values;
     }

@@ -21,50 +21,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="bottom">
 
             <TextView
                 android:id="@+id/stop_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:scaleY="1.25"
                 android:text="8888"
+                android:fontFamily="sans-serif"
                 android:textColor="#ff9100"
-                android:textSize="32dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/street_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:padding="3dp">
-
-                <TextView
-                    android:id="@+id/street_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="marquee"
-                    android:fontFamily="sans-serif"
-                    android:maxLines="1"
-                    android:text="Street Name"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="16dp"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/district_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif"
-                    android:maxLines="1"
-                    android:text="District Name"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14dp"
-                    android:textStyle="normal" />
-            </LinearLayout>
+                android:fontFamily="sans-serif"
+                android:maxLines="1"
+                android:text="Street Name"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                android:paddingLeft="3dp"
+                android:textStyle="normal" />
 
         </LinearLayout>
 
@@ -74,17 +54,64 @@
             android:layout_gravity="bottom"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom">
+
+                <TextView
+                    android:id="@+id/district_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:text="District Name"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:fontFamily="sans-serif"
+                    android:text=" - "/>
+
+                <TextView
+                    android:id="@+id/city_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="2"
+                    android:text="City Name"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/stop_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:ellipsize="marquee"
                 android:fontFamily="sans-serif"
                 android:maxLines="2"
                 android:text="Bus Stop description, if available"
                 android:textColor="@color/colorAccent"
                 android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/lines_available"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:fontFamily="sans-serif"
+                android:maxLines="2"
+                android:text="003, 027, 029, 909"
+                android:textColor="@color/colorAccent"
+                android:textSize="14dp" />
+
         </LinearLayout>
     </LinearLayout>
 
@@ -109,6 +136,5 @@
             app:srcCompat="@drawable/ic_google_maps" />
 
     </LinearLayout>
-
 
 </LinearLayout>

@@ -15,7 +15,7 @@ public class BusStop {
     private String city;
     private String reference;
     private Boolean favorite;
-    private String buses;
+    private String lines;
 
     public BusStop() {
 
@@ -31,7 +31,7 @@ public class BusStop {
         this.city = city;
         this.reference = reference;
         this.favorite = favorite;
-        this.buses = buses;
+        this.lines = buses;
     }
 
     public Integer getId() {
@@ -106,11 +106,11 @@ public class BusStop {
         this.favorite = favorite;
     }
 
-    public String getBuses() {
-        return buses;
+    public String getLines() {
+        return lines;
     }
 
-    public void setBuses(String buses) {
-        this.buses = buses;
+    public void setLines(String lines) {
+        this.lines = lines;
     }
 }
