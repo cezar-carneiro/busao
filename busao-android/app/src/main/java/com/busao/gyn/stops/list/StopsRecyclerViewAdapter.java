@@ -1,5 +1,6 @@
 package com.busao.gyn.stops.list;
 
+import android.graphics.Typeface;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.data.AbstractDataSource;
 import com.busao.gyn.stops.BusStop;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -95,7 +98,14 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         holder.stopNumber.setText(code);
         holder.streetName.setText(stop.getAddress());
         holder.districtName.setText(stop.getNeighborhood());
-        holder.stopDescription.setText(stop.getReference());
+
+        if(StringUtils.isEmpty(stop.getReference())){
+            holder.stopDescription.setText("(Sem descrição disponível)");
+            holder.stopDescription.setTypeface(null, Typeface.ITALIC);
+        }else{
+            holder.stopDescription.setText(stop.getReference());
+            holder.stopDescription.setTypeface(null, Typeface.NORMAL);
+        }
 
         if(stop.getFavorite() != null && stop.getFavorite()){
             holder.imageFavorite.setImageResource(R.drawable.ic_favorite);
