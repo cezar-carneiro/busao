@@ -91,9 +91,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         }
         final BusStop stop = dataset.get(position);
         String code = String.valueOf(dataset.get(position).getCode());
-        if(code.length() < 4)
-            for(int i = 0; i <= 4 - code.length(); i++)
-                code= "0"+code;
+        while(code.length() < 4) code = "0" + code;
 
         holder.stopNumber.setText(code);
         holder.streetName.setText(stop.getAddress());
