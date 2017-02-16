@@ -16,7 +16,7 @@
                     android:scrollbars="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#ff9100"/>
+                    android:background="@color/grey"/>
 
                 <TextView
                     android:id="@+id/noItemsTextView"
