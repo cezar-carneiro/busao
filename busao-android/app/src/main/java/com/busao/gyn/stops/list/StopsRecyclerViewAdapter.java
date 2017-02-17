@@ -101,6 +101,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         holder.districtName.setText(stop.getNeighborhood());
 
         if(StringUtils.isEmpty(stop.getReference())){
+//            holder.stopDescription.setVisibility(View.GONE);
             holder.stopDescription.setText("(Sem descrição disponível)");
             holder.stopDescription.setTypeface(null, Typeface.ITALIC);
         }else{
