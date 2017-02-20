@@ -1,0 +1,13 @@
+language: android
+sudo: false
+
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-24.0.2
+    - android-16
+    - android-24
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
