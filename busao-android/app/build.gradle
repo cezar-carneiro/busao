@@ -11,6 +11,7 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [googleMapsApiKey: "$System.env.GOOGLE_MAPS_API_KEY"]
     }
     buildTypes {
         release {
