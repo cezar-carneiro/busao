@@ -1,21 +1,21 @@
 package com.busao.gyn.stops.map;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
-import com.busao.gyn.data.BusStopDataLoader;
 import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.stops.BusStop;
+import com.busao.gyn.util.BusStopUtils;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,19 +84,25 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         this.map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {
-                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-                View v = inflater.inflate(R.layout.stop_list_item, null);
+                View v = getActivity().getLayoutInflater().inflate(R.layout.stop_details_map_dialog, null);
 
-                BusStop stop = dataSource.read(Integer.valueOf(marker.getTitle()));
+                BusStop stop = (BusStop) marker.getTag();
 
-                TextView stopNumber = (TextView) v.findViewById(R.id.stop_number);
-                stopNumber.setText(String.valueOf(stop.getCode()));
-                TextView streetName = (TextView) v.findViewById(R.id.street_name);
-                streetName.setText(stop.getAddress());
                 TextView districtName = (TextView) v.findViewById(R.id.district_name);
                 districtName.setText(stop.getNeighborhood());
+                TextView cityName = (TextView) v.findViewById(R.id.city_name);
+                cityName.setText(stop.getCity());
                 TextView stopDescription = (TextView) v.findViewById(R.id.stop_description);
-                stopDescription.setText(stop.getReference());
+                if(StringUtils.isEmpty(stop.getReference())){
+                    //stopDescription.setVisibility(View.GONE);
+                    stopDescription.setText("(Sem descrição disponível)");
+                    stopDescription.setTypeface(null, Typeface.ITALIC);
+                }else{
+                    stopDescription.setText(stop.getReference());
+                    stopDescription.setTypeface(null, Typeface.NORMAL);
+                }
+                TextView linesAvailable = (TextView) v.findViewById(R.id.lines_available);
+                linesAvailable.setText(stop.getLines());
                 final ImageView imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
 
                 if(stop.getFavorite() != null && stop.getFavorite() ){
@@ -118,9 +126,19 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                     }
                 });
 
-                AlertDialog.Builder dialog= new AlertDialog.Builder(getContext());
-                dialog.setView(v);
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.StopDetailsMapDialogStyle);
+                dialogBuilder.setTitle(BusStopUtils.formatBusStop(stop.getCode(), stop.getAddress()));
+                dialogBuilder.setView(v);
+                dialogBuilder.setNegativeButton("CLOSE", null);
+                AlertDialog dialog = dialogBuilder.create();
+
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(dialog.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 dialog.show();
+                dialog.getWindow().setAttributes(lp);
 
                 return false;
             }
@@ -174,8 +192,9 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         for(BusStop stop : stops){
             MarkerOptions mo = new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
-                    .title(String.valueOf(stop.getId()));
+                    .title(String.valueOf(stop.getCode())).snippet(stop.getAddress());
             Marker marker = map.addMarker(mo);
+            marker.setTag(stop);
             markers.add(marker);
         }
     }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.data.AbstractDataSource;
 import com.busao.gyn.stops.BusStop;
+import com.busao.gyn.util.BusStopUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -93,8 +94,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
             return;
         }
         final BusStop stop = dataset.get(position);
-        String code = String.valueOf(dataset.get(position).getCode());
-        while(code.length() < 4) code = "0" + code;
+        String code = BusStopUtils.formatBusStop(dataset.get(position).getCode());
 
         holder.stopNumber.setText(code);
         holder.streetName.setText(stop.getAddress());

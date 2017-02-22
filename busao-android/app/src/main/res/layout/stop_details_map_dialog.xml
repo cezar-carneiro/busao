@@ -1,0 +1,108 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="1.0"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="#FFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0.15"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom">
+
+                <TextView
+                    android:id="@+id/district_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="2"
+                    android:text="District Name"
+                    android:textColor="#7e7e7e"
+                    android:textSize="18dp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#7e7e7e"
+                    android:textSize="18dp"
+                    android:fontFamily="sans-serif"
+                    android:text=" - "/>
+
+                <TextView
+                    android:id="@+id/city_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:text="City Name"
+                    android:textColor="#7e7e7e"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/stop_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:fontFamily="sans-serif"
+                android:ellipsize="marquee"
+                android:maxLines="2"
+                android:text="Bus Stop description, if available"
+                android:textColor="#7e7e7e"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/lines_available"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:fontFamily="sans-serif"
+                android:ellipsize="marquee"
+                android:maxLines="4"
+                android:text="888, 888, 888, 888"
+                android:textColor="#7e7e7e"
+                android:textSize="16dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.85"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/imageFavorite"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_favorite_border" />
+
+    </LinearLayout>
+
+</LinearLayout>
