@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.busao.gyn.stops.list.StopListFragment;
 import com.busao.gyn.stops.map.BusaoMapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 
 /**
  * Created by cezar on 13/10/16.

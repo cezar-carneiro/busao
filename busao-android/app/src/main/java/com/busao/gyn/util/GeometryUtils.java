@@ -1,7 +1,5 @@
 package com.busao.gyn.util;
 
-import android.graphics.PointF;
-
 import com.google.android.gms.maps.model.LatLng;
 
 /**

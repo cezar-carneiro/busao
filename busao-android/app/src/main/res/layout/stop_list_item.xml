@@ -37,6 +37,14 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18dp"
+                android:fontFamily="sans-serif"
+                android:text=" - "/>
+
+            <TextView
                 android:id="@+id/street_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,7 +54,6 @@
                 android:text="Street Name salve o vila nova tetracampeão"
                 android:textColor="@color/colorAccent"
                 android:textSize="18dp"
-                android:paddingLeft="3dp"
                 android:textStyle="normal" />
 
         </LinearLayout>

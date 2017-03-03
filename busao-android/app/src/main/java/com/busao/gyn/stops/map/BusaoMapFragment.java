@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,7 +115,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                 imageFavorite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BusStop stop = dataSource.read(Integer.valueOf(marker.getTitle()));
+                        BusStop stop = (BusStop) marker.getTag();
                         stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
                         if(stop.getFavorite() != null && stop.getFavorite() ){
                             imageFavorite.setImageResource(R.drawable.ic_favorite);
@@ -123,6 +124,8 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                         }
                         dataSource.update(stop);
                         dataSource.refreshItems();
+                        Snackbar.make(BusaoMapFragment.this.getView(), "Ponto " + stop.getCode() + " atualizado.", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
                     }
                 });
 

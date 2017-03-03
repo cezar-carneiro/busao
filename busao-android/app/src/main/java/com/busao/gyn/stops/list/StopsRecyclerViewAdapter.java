@@ -1,6 +1,8 @@
 package com.busao.gyn.stops.list;
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
+import com.busao.gyn.ScheduleActivity;
 import com.busao.gyn.data.AbstractDataSource;
 import com.busao.gyn.stops.BusStop;
+import com.busao.gyn.stops.map.BusaoMapFragment;
 import com.busao.gyn.util.BusStopUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -131,7 +135,17 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         holder.imageMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(holder.itemView, "TODO: Redirecionar para o mapa", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), ScheduleActivity.class);
+                intent.putExtra("code", stop.getCode());
+                v.getContext().startActivity(intent);
             }
         });
 
