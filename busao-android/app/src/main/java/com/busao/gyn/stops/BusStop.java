@@ -21,19 +21,6 @@ public class BusStop {
 
     }
 
-    public BusStop(Integer id, Integer code, Double latitude, Double longitude, String address, String neighborhood, String city, String reference, Boolean favorite, String buses) {
-        this.id = id;
-        this.code = code;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.address = address;
-        this.neighborhood = neighborhood;
-        this.city = city;
-        this.reference = reference;
-        this.favorite = favorite;
-        this.lines = buses;
-    }
-
     public Integer getId() {
         return id;
     }

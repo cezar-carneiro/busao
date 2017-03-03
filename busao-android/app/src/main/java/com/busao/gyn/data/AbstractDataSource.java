@@ -13,14 +13,8 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public abstract class AbstractDataSource<T> {
 
-    public interface DataSourceObserver {
-        void onDataChanged();
-    }
-
-    private List<DataSourceObserver> mObservers = new ArrayList<DataSourceObserver>();
-
+    private List<DataSourceObserver> mObservers;
     private Map<Integer, T> mCachedItems;
-
     private boolean mCacheIsDirty;
 
     protected SQLiteDatabase mDatabase;
@@ -29,6 +23,7 @@ public abstract class AbstractDataSource<T> {
     protected AbstractDataSource(Context context) {
         this.mDatabaseHelper = new DataBaseHelper(context);
         this.mDatabase = mDatabaseHelper.getWritableDatabase();
+        this.mObservers = new ArrayList<DataSourceObserver>();
     }
 
     public void close(){
@@ -76,4 +71,8 @@ public abstract class AbstractDataSource<T> {
     public abstract List<T> read();
     public abstract boolean update(T entity);
     public abstract boolean delete(T entity);
+
+    public interface DataSourceObserver {
+        void onDataChanged();
+    }
 }
