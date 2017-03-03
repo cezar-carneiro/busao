@@ -20,11 +20,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static String TAG = "DataBaseHelper"; // Tag just for the LogCat window
 
-    private static String DB_PATH = "";
     private static String DB_NAME ="database.db";// Database name
-
     private static Integer VERSION = 1;
 
+    private String mDbPath;
     private SQLiteDatabase mDataBase;
     private final Context mContext;
 
@@ -32,9 +31,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, VERSION);// 1? Its mDatabase Version
         this.mContext = context;
         if (android.os.Build.VERSION.SDK_INT >= 17) {
-            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+            this.mDbPath = context.getApplicationInfo().dataDir + "/databases/";
         } else {
-            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+            this.mDbPath = "/data/data/" + context.getPackageName() + "/databases/";
         }
     }
 
@@ -53,14 +52,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     private boolean fileExists() {
-        File dbFile = new File(DB_PATH + DB_NAME);
+        File dbFile = new File(mDbPath + DB_NAME);
         //Log.v("dbFile", dbFile + "   "+ dbFile.exists());
         return dbFile.exists();
     }
 
     private void copyDataBase() throws IOException {
         InputStream mInput = mContext.getAssets().open(DB_NAME);
-        String outFileName = DB_PATH + DB_NAME;
+        String outFileName = mDbPath + DB_NAME;
         OutputStream mOutput = new FileOutputStream(outFileName);
         byte[] mBuffer = new byte[4096];
         int mLength;
@@ -73,7 +72,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean openDataBase() throws SQLException {
-        String mPath = DB_PATH + DB_NAME;
+        String mPath = mDbPath + DB_NAME;
         mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);
         //mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
         return mDataBase != null;

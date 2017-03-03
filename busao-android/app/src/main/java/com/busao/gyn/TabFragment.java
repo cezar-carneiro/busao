@@ -55,13 +55,11 @@ public class TabFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-
             switch (position){
                 case 0 : return new StopListFragment();
                 case 1 : return BusaoMapFragment.newInstance();
+                default: return null;
             }
-
-            return null;
         }
 
         @Override

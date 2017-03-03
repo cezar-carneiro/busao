@@ -14,7 +14,6 @@ import com.busao.gyn.R;
 import com.busao.gyn.ScheduleActivity;
 import com.busao.gyn.data.AbstractDataSource;
 import com.busao.gyn.stops.BusStop;
-import com.busao.gyn.stops.map.BusaoMapFragment;
 import com.busao.gyn.util.BusStopUtils;
 
 import org.apache.commons.lang3.StringUtils;
