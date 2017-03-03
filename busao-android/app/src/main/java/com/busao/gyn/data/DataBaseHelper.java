@@ -25,7 +25,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private String mDbPath;
     private SQLiteDatabase mDataBase;
-    private final Context mContext;
+    private Context mContext;
 
     public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);// 1? Its mDatabase Version
@@ -42,18 +42,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (!mDataBaseExist) {
             this.getReadableDatabase();
             this.close();
-            try {
-                copyDataBase();
-                Log.e(TAG, "createDatabase mDatabase created");
-            } catch (IOException mIOException){
-                throw new Error("ErrorCopyingDataBase");
-            }
+            copyDataBase();
+            Log.e(TAG, "createDatabase mDatabase created");
+
         }
     }
 
     private boolean fileExists() {
         File dbFile = new File(mDbPath + DB_NAME);
-        //Log.v("dbFile", dbFile + "   "+ dbFile.exists());
         return dbFile.exists();
     }
 
@@ -74,7 +70,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public boolean openDataBase() throws SQLException {
         String mPath = mDbPath + DB_NAME;
         mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);
-        //mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
         return mDataBase != null;
     }
 
@@ -88,11 +83,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        ;
+        //TODO auto-generated method stub
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        ;
+        //TODO auto-generated method stub
     }
+
 }
