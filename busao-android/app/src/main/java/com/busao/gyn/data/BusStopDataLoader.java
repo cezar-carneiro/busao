@@ -15,19 +15,8 @@ public class BusStopDataLoader extends AbstractDataLoader<List<BusStop>, BusStop
 
     public static final int ID = 1;
 
-    private String mSelection;
-    private String[] mSelectionArgs;
-    private String mGroupBy;
-    private String mHaving;
-    private String mOrderBy;
-
-    public BusStopDataLoader(Context context, BusStopDataSource dataSource, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+    public BusStopDataLoader(Context context, BusStopDataSource dataSource) {
         super(context, dataSource);
-        this.mSelection = selection;
-        this.mSelectionArgs = selectionArgs;
-        this.mGroupBy = groupBy;
-        this.mHaving = having;
-        this.mOrderBy = orderBy;
     }
 
     @Override

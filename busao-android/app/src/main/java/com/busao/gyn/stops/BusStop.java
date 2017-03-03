@@ -17,10 +17,6 @@ public class BusStop {
     private Boolean favorite;
     private String lines;
 
-    public BusStop() {
-
-    }
-
     public Integer getId() {
         return id;
     }
