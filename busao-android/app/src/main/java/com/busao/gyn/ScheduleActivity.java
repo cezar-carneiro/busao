@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
@@ -74,7 +75,8 @@ public class ScheduleActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            mScheduleWebView.loadData(s,"text/html","ISO-8859-1");
+            String data = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><style>table{border-collapse:collapse;box-shadow: 0 0 3px #bbb;}table,th,td{border:1px solid #bbb;font-family:Roboto,Verdana,Arial;font-size:11pt;padding-top:8px;padding-bottom:8px;padding-right:4px;text-align:right;}</style><center>" + s + "</center>";
+            mScheduleWebView.loadData(data,"text/html; charset=utf-8","UTF-8");
         }
     }
 
