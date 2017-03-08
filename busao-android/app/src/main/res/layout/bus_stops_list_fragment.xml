@@ -18,19 +18,6 @@
                     android:layout_height="wrap_content"
                     android:background="@color/grey"/>
 
-                <TextView
-                    android:id="@+id/noItemsTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:textAlignment="center"
-                    android:textSize="18dp"
-                    android:textColor="#ff9100"
-                    android:fontFamily="casual"
-                    android:text="Você não possui pontos favoritos. Adicione pontos favoritos através da busca ou do mapa."
-                    android:layout_centerVertical="true" />
         </ViewSwitcher>
-
 
 </RelativeLayout>
