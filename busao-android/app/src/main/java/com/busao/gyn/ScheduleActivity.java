@@ -8,6 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+
+import com.busao.gyn.stops.BusStop;
+import com.busao.gyn.util.BusStopUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,6 +24,11 @@ public class ScheduleActivity extends AppCompatActivity {
     private FrameLayout mWebViewContainer;
     private WebView mScheduleWebView;
 
+    private TextView stopNumber;
+    private TextView districtName;
+    private TextView stopDescription;
+    private TextView linesAvailable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,20 +36,30 @@ public class ScheduleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final BusStop stop = (BusStop) getIntent().getSerializableExtra("stop");
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Integer code = getIntent().getIntExtra("code", 0);
-                new FetchScheduleAsyncTask().execute(code);
+                new FetchScheduleAsyncTask().execute(stop);
             }
         });
 
         mWebViewContainer = (FrameLayout) findViewById(R.id.webViewContainer);
         mWebViewContainer.addView((mScheduleWebView = new WebView(getApplicationContext())));
 
-        Integer code = getIntent().getIntExtra("code", 0);
-        new FetchScheduleAsyncTask().execute(code);
+        this.stopNumber = (TextView) findViewById(R.id.stopNumber);
+        this.districtName = (TextView) findViewById(R.id.districtName);
+        this.stopDescription = (TextView) findViewById(R.id.stopDescription);
+        this.linesAvailable = (TextView) findViewById(R.id.linesAvailable);
+
+        this.stopNumber.setText(BusStopUtils.formatBusStop(stop.getCode()));
+        this.districtName.setText(stop.getAddress());
+        this.stopDescription.setText(stop.getReference());
+        this.linesAvailable.setText(stop.getLines());
+
+        new FetchScheduleAsyncTask().execute(stop);
     }
 
     @Override
@@ -50,17 +69,19 @@ public class ScheduleActivity extends AppCompatActivity {
         mScheduleWebView.destroy();
     }
 
-    private class FetchScheduleAsyncTask extends AsyncTask<Integer,Void, String>{
+    private class FetchScheduleAsyncTask extends AsyncTask<BusStop,Void, String>{
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mScheduleWebView.loadData("<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <b>Aguarde...</b>","text/html; charset=utf-8","UTF-8");
         }
 
         @Override
-        protected String doInBackground(Integer... params) {
+        protected String doInBackground(BusStop... params) {
             try {
-                Document doc = Jsoup.connect("http://m.rmtcgoiania.com.br/horariodeviagem/visualizar/ponto/" + params[0])
+                BusStop stop = params[0];
+                Document doc = Jsoup.connect("http://m.rmtcgoiania.com.br/horariodeviagem/visualizar/ponto/" + stop.getCode())
                         .userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0")
                         .get();
                 Elements elem = doc.select(".table.table-striped.subtab-previsoes");

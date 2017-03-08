@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:text="District Name"
                     android:textColor="#7e7e7e"
                     android:textSize="18dp"

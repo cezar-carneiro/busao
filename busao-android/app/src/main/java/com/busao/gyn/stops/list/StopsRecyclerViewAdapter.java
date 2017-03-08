@@ -143,7 +143,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), ScheduleActivity.class);
-                intent.putExtra("code", stop.getCode());
+                intent.putExtra("stop", stop);
                 v.getContext().startActivity(intent);
             }
         });

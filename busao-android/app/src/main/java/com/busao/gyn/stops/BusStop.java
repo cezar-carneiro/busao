@@ -1,10 +1,12 @@
 package com.busao.gyn.stops;
 
+import java.io.Serializable;
+
 /**
  * Created by cezar on 23/01/17.
  */
 
-public class BusStop {
+public class BusStop implements Serializable{
 
     private Integer id;
     private Integer code;
