@@ -74,7 +74,7 @@ public class ScheduleActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mScheduleWebView.loadData("<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <b>Aguarde...</b>","text/html; charset=utf-8","UTF-8");
+            mScheduleWebView.loadData("<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <b style=\"position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);\">Aguarde...</b>","text/html; charset=utf-8","UTF-8");
         }
 
         @Override
