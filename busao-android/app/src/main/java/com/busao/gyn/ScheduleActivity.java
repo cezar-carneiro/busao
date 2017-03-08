@@ -24,11 +24,6 @@ public class ScheduleActivity extends AppCompatActivity {
     private FrameLayout mWebViewContainer;
     private WebView mScheduleWebView;
 
-    private TextView stopNumber;
-    private TextView districtName;
-    private TextView stopDescription;
-    private TextView linesAvailable;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,15 +44,15 @@ public class ScheduleActivity extends AppCompatActivity {
         mWebViewContainer = (FrameLayout) findViewById(R.id.webViewContainer);
         mWebViewContainer.addView((mScheduleWebView = new WebView(getApplicationContext())));
 
-        this.stopNumber = (TextView) findViewById(R.id.stopNumber);
-        this.districtName = (TextView) findViewById(R.id.districtName);
-        this.stopDescription = (TextView) findViewById(R.id.stopDescription);
-        this.linesAvailable = (TextView) findViewById(R.id.linesAvailable);
+        TextView stopNumber = (TextView) findViewById(R.id.stopNumber);
+        TextView districtName = (TextView) findViewById(R.id.districtName);
+        TextView stopDescription = (TextView) findViewById(R.id.stopDescription);
+        TextView linesAvailable = (TextView) findViewById(R.id.linesAvailable);
 
-        this.stopNumber.setText(BusStopUtils.formatBusStop(stop.getCode()));
-        this.districtName.setText(stop.getAddress());
-        this.stopDescription.setText(stop.getReference());
-        this.linesAvailable.setText(stop.getLines());
+        stopNumber.setText(BusStopUtils.formatBusStop(stop.getCode()));
+        districtName.setText(stop.getAddress());
+        stopDescription.setText(stop.getReference());
+        linesAvailable.setText(stop.getLines());
 
         new FetchScheduleAsyncTask().execute(stop);
     }
