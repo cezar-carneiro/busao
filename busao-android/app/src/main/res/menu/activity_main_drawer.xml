@@ -3,12 +3,12 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_stops"
             android:icon="@drawable/ic_pin"
             android:checked="true"
             android:title="Pontos" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_lines"
             android:icon="@drawable/ic_bus"
             android:title="Linhas" />
         <item
@@ -16,7 +16,7 @@
             android:icon="@drawable/ic_add_shopping_cart"
             android:title="Remove Ads" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
     </group>

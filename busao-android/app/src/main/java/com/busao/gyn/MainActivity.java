@@ -142,13 +142,39 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        if (id == R.id.nav_camera) {
-            // TODO: verify item's id and implement action
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        int id = item.getItemId();
+        switch (id){
+            case R.id.nav_stops:
+                fragmentTransaction.replace(R.id.containerView, new TabFragment()).commit();
+                setTitle("Pontos");
+                break;
+            case R.id.nav_lines:
+                fragmentTransaction.replace(R.id.containerView, new LinesFragment()).commit();
+                setTitle("Pontos");
+                break;
+            case R.id.nav_remove_ads:
+                break;
+            case R.id.nav_settings:
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
+                break;
+            case R.id.nav_rate:
+                break;
+            case R.id.nav_developer:
+                break;
+            case R.id.nav_info:
+                break;
+            default:
+                break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
