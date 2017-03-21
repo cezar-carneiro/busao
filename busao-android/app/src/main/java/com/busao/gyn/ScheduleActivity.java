@@ -30,6 +30,12 @@ public class ScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_schedule);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScheduleActivity.this.finish();
+            }
+        });
 
         final BusStop stop = (BusStop) getIntent().getSerializableExtra("stop");
 
