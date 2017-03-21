@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_lines:
                 fragmentTransaction.replace(R.id.containerView, new LinesFragment()).commit();
-                setTitle("Pontos");
+                setTitle("Linhas");
                 break;
             case R.id.nav_remove_ads:
                 break;
