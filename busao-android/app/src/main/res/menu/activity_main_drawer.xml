@@ -21,34 +21,39 @@
             android:title="Settings" />
     </group>
 
-    <item android:title="Communicate">
+    <group android:title="Communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
+                android:checkable="false"
                 android:title="Share" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
+                android:checkable="false"
                 android:title="Send" />
         </menu>
-    </item>
+    </group>
 
-    <item android:title="About">
-        <menu>
+    <group android:title="About" >
+        <menu >
             <item
                 android:id="@+id/nav_rate"
                 android:icon="@drawable/ic_star"
+                android:checkable="false"
                 android:title="Rate" />
             <item
                 android:id="@+id/nav_developer"
                 android:icon="@drawable/ic_face"
+                android:checkable="true"
                 android:title="Developer" />
             <item
                 android:id="@+id/nav_info"
                 android:icon="@drawable/ic_info"
+                android:checkable="false"
                 android:title="Info" />
         </menu>
-    </item>
+    </group>
 
 </menu>
