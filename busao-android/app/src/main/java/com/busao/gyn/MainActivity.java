@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -170,6 +171,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_developer:
                 break;
             case R.id.nav_info:
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("Info");
+                dialog.setMessage("Versão 1.0.0");
+                dialog.setCancelable(true);
+                dialog.setPositiveButton("Ok", null);
+                dialog.show();
                 break;
             default:
                 break;
