@@ -1,5 +1,6 @@
 package com.busao.gyn.stops.list;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,15 +48,24 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
         stopsRecyclerView.setLayoutManager(layoutManager);
         stopsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mDataSource = BusStopDataSource.getInstance(getActivity().getApplicationContext());
-
-        mAdapter = new StopsRecyclerViewAdapter(mDataSource);
-
         stopsRecyclerView.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(BusStopDataLoader.ID, null, this);
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mDataSource = BusStopDataSource.getInstance(context.getApplicationContext());
+
+        mAdapter = new StopsRecyclerViewAdapter(mDataSource);
+
+        if(context instanceof OnMapIconClickListener) {
+            mAdapter.addListener(StopListFragment.class.getName(), (OnMapIconClickListener) context);
+        }
+
     }
 
     private void switchViews(List<BusStop> stops) {
@@ -89,5 +99,11 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
     public void onDestroy() {
         super.onDestroy();
         BusStopDataSource.destroyInstance();
+    }
+
+    public interface OnMapIconClickListener{
+
+        public void onMapIconClick(final BusStop stop);
+
     }
 }

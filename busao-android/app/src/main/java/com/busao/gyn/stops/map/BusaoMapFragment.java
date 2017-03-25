@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.stops.BusStop;
+import com.busao.gyn.stops.list.StopListFragment;
 import com.busao.gyn.util.BusStopUtils;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,7 +52,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         getMapAsync(this);
     }
 
-    public static SupportMapFragment newInstance() {
+    public static BusaoMapFragment newInstance() {
         return new BusaoMapFragment();
     }
 
@@ -153,7 +154,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                 LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
 
                 if(firstZoom) {
-                    changeCamera(loc);
+                    changeCamera(ll);
                     searchLocation(ll);
                     firstZoom = false;
                 }
@@ -170,6 +171,14 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     private void searchLocation(LatLng ll){
+        createCircle(ll);
+
+        LatLng[] area = GeometryUtils.areaNearPosition(new LatLng(ll.latitude, ll.longitude), 500);
+        List list = dataSource.search(area);
+        refreshMarkers(map, list);
+    }
+
+    private void createCircle(LatLng ll) {
         if(locationCircle == null){
             locationCircle = map.addCircle(new CircleOptions()
                     .center(ll)
@@ -180,34 +189,50 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         } else {
             locationCircle.setCenter(ll);
         }
-
-        LatLng[] area = GeometryUtils.areaNearPosition(new LatLng(ll.latitude, ll.longitude), 500);
-        List list = dataSource.search(area);
-        changeStopsMarkers(map, list);
     }
 
-    private void changeStopsMarkers(GoogleMap map, List<BusStop> stops){
+    private void refreshMarkers(GoogleMap map, List<BusStop> stops){
+        clearMarkers();
+
+        for(BusStop stop : stops){
+            createMarker(stop);
+        }
+    }
+
+    private void clearMarkers() {
         for(Marker m: markers){
             m.remove();
         }
 
         markers.clear();
-
-        for(BusStop stop : stops){
-            MarkerOptions mo = new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
-                    .title(String.valueOf(stop.getCode())).snippet(stop.getAddress());
-            Marker marker = map.addMarker(mo);
-            marker.setTag(stop);
-            markers.add(marker);
-        }
     }
 
-    private void changeCamera(Location loc){
+    private void createMarker(BusStop stop) {
+        MarkerOptions mo = new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
+                .title(String.valueOf(stop.getCode())).snippet(stop.getAddress());
+        Marker marker = map.addMarker(mo);
+        marker.setTag(stop);
+        markers.add(marker);
+    }
+
+    private void changeCamera(LatLng loc){
         if(loc == null || map == null) {
             return;
         }
-        LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(ll, 17), 2000, null);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17), 2000, null);
     }
 
+    public void showSingleStop(final BusStop stop) {
+        if(map == null){
+            return;
+        }
+        firstZoom = false;
+        if(locationCircle != null){
+            locationCircle.remove();
+            locationCircle = null;
+        }
+        clearMarkers();
+        createMarker(stop);
+        changeCamera(new LatLng(stop.getLatitude(), stop.getLongitude()));
+    }
 }

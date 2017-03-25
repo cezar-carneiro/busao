@@ -2,7 +2,6 @@ package com.busao.gyn.stops.list;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,9 @@ import com.busao.gyn.util.BusStopUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cezar on 03/01/17.
@@ -29,6 +30,8 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
     private List<BusStop> dataset;
     private AbstractDataSource dataSource;
 
+    private Map<String, StopListFragment.OnMapIconClickListener> listeners = new HashMap<String, StopListFragment.OnMapIconClickListener>();
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView stopNumber;
@@ -37,7 +40,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         public TextView stopDescription;
         public TextView cityName;
         public TextView linesAvailable;
-        public ImageView imageFavorite;
+        public ImageView imageDelete;
         public ImageView imageMap;
 
         public ViewHolder(View v) {
@@ -48,7 +51,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
             stopDescription = (TextView) v.findViewById(R.id.stop_description);
             cityName = (TextView) v.findViewById(R.id.city_name);
             linesAvailable = (TextView) v.findViewById(R.id.lines_available);
-            imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
+            imageDelete = (ImageView) v.findViewById(R.id.imageDelete);
             imageMap = (ImageView) v.findViewById(R.id.imageMap);
         }
     }
@@ -60,6 +63,20 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
     public StopsRecyclerViewAdapter(AbstractDataSource dataSource, List<BusStop> dataset) {
         this.dataSource = dataSource;
         this.dataset = dataset;
+    }
+
+    public void addListener(String id, StopListFragment.OnMapIconClickListener listener){
+        listeners.put(id, listener);
+    }
+
+    public void removeListener(String id){
+        listeners.remove(id);
+    }
+
+    private void fireMapIconClickEvent(BusStop stop){
+        for(StopListFragment.OnMapIconClickListener listener : listeners.values()){
+            listener.onMapIconClick(stop);
+        }
     }
 
     public void refresh(List<BusStop> data){
@@ -116,13 +133,13 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
 
         holder.linesAvailable.setText(stop.getLines());
 
-        if(stop.getFavorite() != null && stop.getFavorite()){
-            holder.imageFavorite.setImageResource(R.drawable.ic_favorite);
-        }else{
-            holder.imageFavorite.setImageResource(R.drawable.ic_favorite_border);
-        }
+//        if(stop.getFavorite() != null && stop.getFavorite()){
+//            holder.imageDelete.setImageResource(R.drawable.ic_favorite);
+//        }else{
+//            holder.imageDelete.setImageResource(R.drawable.ic_favorite_border);
+//        }
 
-        holder.imageFavorite.setOnClickListener(new View.OnClickListener() {
+        holder.imageDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
@@ -134,8 +151,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         holder.imageMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(holder.itemView, "TODO: Redirecionar para o mapa", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                fireMapIconClickEvent(stop);
             }
         });
 

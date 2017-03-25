@@ -135,11 +135,11 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/imageFavorite"
+            android:id="@+id/imageDelete"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="4dp"
-            app:srcCompat="@drawable/ic_favorite_border" />
+            app:srcCompat="@drawable/ic_delete" />
 
         <ImageView
             android:id="@+id/imageMap"
@@ -151,3 +151,4 @@
     </LinearLayout>
 
 </LinearLayout>
+
