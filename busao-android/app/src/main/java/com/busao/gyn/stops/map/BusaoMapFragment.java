@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.stops.BusStop;
-import com.busao.gyn.stops.list.StopListFragment;
 import com.busao.gyn.util.BusStopUtils;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -175,7 +174,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         LatLng[] area = GeometryUtils.areaNearPosition(new LatLng(ll.latitude, ll.longitude), 500);
         List list = dataSource.search(area);
-        refreshMarkers(map, list);
+        refreshMarkers(list);
     }
 
     private void createCircle(LatLng ll) {
@@ -191,7 +190,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         }
     }
 
-    private void refreshMarkers(GoogleMap map, List<BusStop> stops){
+    private void refreshMarkers(List<BusStop> stops){
         clearMarkers();
 
         for(BusStop stop : stops){
