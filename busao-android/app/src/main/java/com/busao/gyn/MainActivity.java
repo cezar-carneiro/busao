@@ -215,7 +215,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onMapIconClick(BusStop stop) {
-
         TabFragment tabFragment = (TabFragment)
                 getSupportFragmentManager().findFragmentById(R.id.containerView);
 

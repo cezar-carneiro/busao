@@ -39,13 +39,13 @@ import java.util.List;
 
 public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCallback{
 
-    private GoogleMap map;
-    private Boolean firstZoom = true;
+    private GoogleMap mGoogleMap;
+    private Boolean mFirstZoom = true;
 
-    private List<Marker> markers = new ArrayList<Marker>();
-    private Circle locationCircle;
+    private List<Marker> mMarkers = new ArrayList<Marker>();
+    private Circle mLocationCircle;
 
-    private BusStopDataSource dataSource;
+    private BusStopDataSource mDataSource;
 
     public BusaoMapFragment(){
         getMapAsync(this);
@@ -57,7 +57,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.dataSource = BusStopDataSource.getInstance(getActivity().getApplicationContext());
+        this.mDataSource = BusStopDataSource.getInstance(getActivity().getApplicationContext());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -68,21 +68,21 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera.
+     * Manipulates the mGoogleMap once available.
+     * This callback is triggered when the mGoogleMap is ready to be used.
+     * This is where we can add mMarkers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
     @Override
     public void onMapReady(final GoogleMap map) {
-        this.map = map;
+        this.mGoogleMap = map;
 
-        this.map.getUiSettings().setZoomControlsEnabled(true);
-        this.map.getUiSettings().setCompassEnabled(true);
-        this.map.setMyLocationEnabled(true);
-        this.map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        this.mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        this.mGoogleMap.getUiSettings().setCompassEnabled(true);
+        this.mGoogleMap.setMyLocationEnabled(true);
+        this.mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {
                 View v = getActivity().getLayoutInflater().inflate(R.layout.stop_details_map_dialog, null);
@@ -122,8 +122,8 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                         }else{
                             imageFavorite.setImageResource(R.drawable.ic_favorite_border);
                         }
-                        dataSource.update(stop);
-                        dataSource.refreshItems();
+                        mDataSource.update(stop);
+                        mDataSource.refreshItems();
                         Snackbar.make(BusaoMapFragment.this.getView(), "Ponto " + stop.getCode() + " atualizado.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
@@ -146,21 +146,21 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                 return false;
             }
         });
-        this.map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+        this.mGoogleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 
             @Override
             public void onMyLocationChange(Location loc) {
                 LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
 
-                if(firstZoom) {
+                if(mFirstZoom) {
                     changeCamera(ll);
                     searchLocation(ll);
-                    firstZoom = false;
+                    mFirstZoom = false;
                 }
             }
         });
 
-        this.map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        this.mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
                 searchLocation(latLng);
@@ -173,20 +173,20 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         createCircle(ll);
 
         LatLng[] area = GeometryUtils.areaNearPosition(new LatLng(ll.latitude, ll.longitude), 500);
-        List list = dataSource.search(area);
+        List list = mDataSource.search(area);
         refreshMarkers(list);
     }
 
     private void createCircle(LatLng ll) {
-        if(locationCircle == null){
-            locationCircle = map.addCircle(new CircleOptions()
+        if(mLocationCircle == null){
+            mLocationCircle = mGoogleMap.addCircle(new CircleOptions()
                     .center(ll)
                     .radius(500)
                     .strokeWidth(4)
                     .strokeColor(Color.argb(80, 255, 145, 0))
                     .fillColor(Color.argb(20, 255, 187, 0)));
         } else {
-            locationCircle.setCenter(ll);
+            mLocationCircle.setCenter(ll);
         }
     }
 
@@ -199,36 +199,36 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     private void clearMarkers() {
-        for(Marker m: markers){
+        for(Marker m: mMarkers){
             m.remove();
         }
 
-        markers.clear();
+        mMarkers.clear();
     }
 
     private void createMarker(BusStop stop) {
         MarkerOptions mo = new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
                 .title(String.valueOf(stop.getCode())).snippet(stop.getAddress());
-        Marker marker = map.addMarker(mo);
+        Marker marker = mGoogleMap.addMarker(mo);
         marker.setTag(stop);
-        markers.add(marker);
+        mMarkers.add(marker);
     }
 
     private void changeCamera(LatLng loc){
-        if(loc == null || map == null) {
+        if(loc == null || mGoogleMap == null) {
             return;
         }
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17), 2000, null);
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17), 2000, null);
     }
 
     public void showSingleStop(final BusStop stop) {
-        if(map == null){
+        if(mGoogleMap == null){
             return;
         }
-        firstZoom = false;
-        if(locationCircle != null){
-            locationCircle.remove();
-            locationCircle = null;
+        mFirstZoom = false;
+        if(mLocationCircle != null){
+            mLocationCircle.remove();
+            mLocationCircle = null;
         }
         clearMarkers();
         createMarker(stop);

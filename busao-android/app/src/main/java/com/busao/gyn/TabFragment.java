@@ -21,8 +21,8 @@ import com.busao.gyn.stops.map.BusaoMapFragment;
 
 public class TabFragment extends Fragment {
 
-    private ViewPager viewPager;
-    private ViewPagerAdapter viewPagerAdapter;
+    private ViewPager mViewPager;
+    private ViewPagerAdapter mViewPagerAdapter;
 
     public static final String ARG_POSITION = "POS";
 
@@ -31,9 +31,9 @@ public class TabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View x =  inflater.inflate(R.layout.tab_layout,null);
         final TabLayout tabLayout = (TabLayout) x.findViewById(R.id.tabs);
-        this.viewPager = (ViewPager) x.findViewById(R.id.viewPager);
+        this.mViewPager = (ViewPager) x.findViewById(R.id.viewPager);
 
-        viewPager.setAdapter((viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), new String[]{"Lista", "Mapa"})));
+        mViewPager.setAdapter((mViewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), new String[]{"Lista", "Mapa"})));
 
         /**
          * Now , this is a workaround ,
@@ -43,9 +43,9 @@ public class TabFragment extends Fragment {
         tabLayout.post(new Runnable() {
             @Override
             public void run() {
-                tabLayout.setupWithViewPager(viewPager);
+                tabLayout.setupWithViewPager(mViewPager);
                 if(getArguments() != null){
-                    viewPager.setCurrentItem(getArguments().getInt(ARG_POSITION));
+                    mViewPager.setCurrentItem(getArguments().getInt(ARG_POSITION));
                 }
             }
         });
@@ -54,11 +54,11 @@ public class TabFragment extends Fragment {
     }
 
     public void swipeToMap(){
-        viewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(1);
     }
 
     public BusaoMapFragment getMapFragment(){
-        return (BusaoMapFragment) viewPagerAdapter.registeredFragments.get(1);
+        return (BusaoMapFragment) mViewPagerAdapter.registeredFragments.get(1);
     }
 
     public class ViewPagerAdapter extends FragmentStatePagerAdapter {
