@@ -5,11 +5,17 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Configurações</string>
-    <string name="title_activity_tabbed">Abas</string>
+    <string name="action_search">Pesquisar</string>
 
-    <string name="title_activity_splash">Splash Screen</string>
+    <string name="search_label">Pesquisar ponto de ônibus</string>
+    <string name="search_hint">Digite número ou endereço</string>
+
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="title_activity_tabbed">Abas</string>
+    <string name="title_activity_splash">Splash Screen</string>
     <string name="title_activity_schedule">Horários</string>
+    <string name="title_activity_search">Pesquisa</string>
 
 </resources>
