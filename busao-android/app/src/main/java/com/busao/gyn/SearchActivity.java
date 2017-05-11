@@ -7,17 +7,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.ViewFlipper;
+
+import com.busao.gyn.stops.BusStop;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         SearchView.OnCloseListener {
+
+    private String mQuery;
+    private List<BusStop> mStops;
+    private ViewFlipper searchResultsViewFlipper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        searchResultsViewFlipper = (ViewFlipper) findViewById(R.id.searchResultsViewFlipper);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -29,6 +43,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         });
 
         handleIntent(getIntent());
+        switchViews();
     }
 
     @Override
@@ -80,7 +95,23 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     private void doSearch(String query){
-        //TODO: we'll do some searching here
+        this.mQuery = query;
+
+        switchViews();
+    }
+
+    private void switchViews() {
+        TextView noResultsTextView = (TextView) findViewById(R.id.searchNoResultsInfoFoundTextView);
+        View searchResultsLayout = findViewById(R.id.searchResultsLayout);
+        if (mStops == null) {
+            noResultsTextView.setText(R.string.search_initial_info);
+            searchResultsViewFlipper.setDisplayedChild(searchResultsViewFlipper.indexOfChild(noResultsTextView));
+        } else if(mStops.size() == 0){
+            noResultsTextView.setText(R.string.search_no_results_found);
+            searchResultsViewFlipper.setDisplayedChild(searchResultsViewFlipper.indexOfChild(noResultsTextView));
+        } else {
+            searchResultsViewFlipper.setDisplayedChild(searchResultsViewFlipper.indexOfChild(searchResultsLayout));
+        }
     }
 
 }

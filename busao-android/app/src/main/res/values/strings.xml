@@ -18,4 +18,7 @@
     <string name="title_activity_schedule">Horários</string>
     <string name="title_activity_search">Pesquisa</string>
 
+    <string name="search_initial_info">Pesquise pelo número, endereço ou referência do Ponto.</string>
+    <string name="search_no_results_found">Nenhum resultado encontrado.</string>
+
 </resources>
