@@ -12,14 +12,14 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.ScheduleActivity;
 import com.busao.gyn.data.AbstractDataSource;
+import com.busao.gyn.events.MapIconClickEvent;
 import com.busao.gyn.stops.BusStop;
 import com.busao.gyn.util.BusStopUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.EventBus;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by cezar on 03/01/17.
@@ -29,8 +29,6 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
 
     private List<BusStop> dataset;
     private AbstractDataSource dataSource;
-
-    private Map<String, StopListFragment.OnMapIconClickListener> listeners = new HashMap<String, StopListFragment.OnMapIconClickListener>();
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -65,18 +63,8 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         this.dataset = dataset;
     }
 
-    public void addListener(String id, StopListFragment.OnMapIconClickListener listener){
-        listeners.put(id, listener);
-    }
-
-    public void removeListener(String id){
-        listeners.remove(id);
-    }
-
     private void fireMapIconClickEvent(BusStop stop){
-        for(StopListFragment.OnMapIconClickListener listener : listeners.values()){
-            listener.onMapIconClick(stop);
-        }
+        EventBus.getDefault().post(new MapIconClickEvent(stop));
     }
 
     public void refresh(List<BusStop> data){

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.busao.gyn.R;
 import com.busao.gyn.data.BusStopDataSource;
+import com.busao.gyn.events.MapIconClickEvent;
 import com.busao.gyn.stops.BusStop;
 import com.busao.gyn.util.BusStopUtils;
 import com.busao.gyn.util.GeometryUtils;
@@ -29,6 +30,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +62,18 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.mDataSource = BusStopDataSource.getInstance(getActivity().getApplicationContext());
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -234,4 +249,10 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         createMarker(stop);
         changeCamera(new LatLng(stop.getLatitude(), stop.getLongitude()));
     }
+
+    @Subscribe
+    public void onMapIconClick(MapIconClickEvent event) {
+        showSingleStop(event.getStop());
+    }
+
 }

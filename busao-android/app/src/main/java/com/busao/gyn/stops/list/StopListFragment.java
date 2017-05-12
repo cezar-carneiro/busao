@@ -59,13 +59,7 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
     public void onAttach(Context context) {
         super.onAttach(context);
         mDataSource = BusStopDataSource.getInstance(context.getApplicationContext());
-
         mAdapter = new StopsRecyclerViewAdapter(mDataSource);
-
-        if(context instanceof OnMapIconClickListener) {
-            mAdapter.addListener(StopListFragment.class.getName(), (OnMapIconClickListener) context);
-        }
-
     }
 
     private void switchViews(List<BusStop> stops) {
@@ -99,11 +93,5 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
     public void onDestroy() {
         super.onDestroy();
         BusStopDataSource.destroyInstance();
-    }
-
-    public interface OnMapIconClickListener{
-
-        public void onMapIconClick(final BusStop stop);
-
     }
 }

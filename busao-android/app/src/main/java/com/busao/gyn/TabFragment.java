@@ -12,8 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.busao.gyn.events.MapIconClickEvent;
 import com.busao.gyn.stops.list.StopListFragment;
 import com.busao.gyn.stops.map.BusaoMapFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by cezar on 13/10/16.
@@ -22,7 +26,6 @@ import com.busao.gyn.stops.map.BusaoMapFragment;
 public class TabFragment extends Fragment {
 
     private ViewPager mViewPager;
-    private ViewPagerAdapter mViewPagerAdapter;
 
     public static final String ARG_POSITION = "POS";
 
@@ -33,7 +36,7 @@ public class TabFragment extends Fragment {
         final TabLayout tabLayout = (TabLayout) x.findViewById(R.id.tabs);
         this.mViewPager = (ViewPager) x.findViewById(R.id.viewPager);
 
-        mViewPager.setAdapter((mViewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), new String[]{"Lista", "Mapa"})));
+        mViewPager.setAdapter(new ViewPagerAdapter(getFragmentManager(), new String[]{"Lista", "Mapa"}));
 
         /**
          * Now , this is a workaround ,
@@ -53,12 +56,25 @@ public class TabFragment extends Fragment {
         return x;
     }
 
-    public void swipeToMap(){
-        mViewPager.setCurrentItem(1);
+    @Override
+    public void onStart(){
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
-    public BusaoMapFragment getMapFragment(){
-        return (BusaoMapFragment) mViewPagerAdapter.registeredFragments.get(1);
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onMapIconClick(MapIconClickEvent event) {
+        swipeToMap();
+    }
+
+    private void swipeToMap(){
+        mViewPager.setCurrentItem(1);
     }
 
     public class ViewPagerAdapter extends FragmentStatePagerAdapter {

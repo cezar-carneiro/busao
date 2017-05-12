@@ -19,12 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.busao.gyn.stops.BusStop;
-import com.busao.gyn.stops.list.StopListFragment;
-import com.busao.gyn.stops.map.BusaoMapFragment;
-
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, StopListFragment.OnMapIconClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,29 +161,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onMapIconClick(BusStop stop) {
-        TabFragment tabFragment = (TabFragment)
-                getSupportFragmentManager().findFragmentById(R.id.containerView);
-
-        if (tabFragment != null) {
-            tabFragment.swipeToMap();
-        } else {
-            TabFragment newFragment = new TabFragment();
-            Bundle args = new Bundle();
-            args.putInt(TabFragment.ARG_POSITION, 1);
-            newFragment.setArguments(args);
-
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            transaction.replace(R.id.containerView, newFragment);
-            transaction.addToBackStack(null);
-
-            transaction.commit();
-        }
-
-        BusaoMapFragment mapFragment = tabFragment.getMapFragment();
-        mapFragment.showSingleStop(stop);
-
-    }
 }
