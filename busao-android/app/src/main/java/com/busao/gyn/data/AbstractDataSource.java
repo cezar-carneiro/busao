@@ -8,14 +8,12 @@ import java.util.Map;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created by cezar on 23/01/17.
  */
 public abstract class AbstractDataSource<T> {
-
-    private List<DataSourceObserver> mObservers;
-    private Map<Integer, T> mCachedItems;
-    private boolean mCacheIsDirty;
 
     protected SQLiteDatabase mDatabase;
     protected DataBaseHelper mDatabaseHelper;
@@ -23,7 +21,6 @@ public abstract class AbstractDataSource<T> {
     protected AbstractDataSource(Context context) {
         this.mDatabaseHelper = new DataBaseHelper(context);
         this.mDatabase = mDatabaseHelper.getWritableDatabase();
-        this.mObservers = new ArrayList<DataSourceObserver>();
     }
 
     public void close(){
@@ -31,48 +28,34 @@ public abstract class AbstractDataSource<T> {
         this.mDatabase.close();
     }
 
-    public void addContentObserver(DataSourceObserver observer) {
-        if (!mObservers.contains(observer)) {
-            mObservers.add(observer);
-        }
+    public boolean create(T entity){
+        return doCreate(entity);
     }
 
-    public void removeContentObserver(DataSourceObserver observer) {
-        if (mObservers.contains(observer)) {
-            mObservers.remove(observer);
-        }
+    protected abstract boolean doCreate(T entity);
+
+    public T read(Integer id){
+        return doRead(id);
     }
 
-    private void notifyContentObserver() {
-        for (DataSourceObserver observer : mObservers) {
-            observer.onDataChanged();
-        }
+    protected abstract T doRead(Integer id);
+
+    public List<T> read(){
+        return doRead();
     }
 
-    public void refreshItems() {
-        mCacheIsDirty = true;
-        notifyContentObserver();
+    protected abstract List<T> doRead();
+
+    public boolean update(T entity){
+        return doUpdate(entity);
     }
 
-    public boolean cachedItemsAvailable() {
-        return mCachedItems != null && !mCacheIsDirty;
+    protected abstract boolean doUpdate(T entity);
+
+    public boolean delete(T entity){
+        return doDelete(entity);
     }
 
-    public Collection<T> getCache() {
-        return mCachedItems == null ? null : mCachedItems.values();
-    }
+    protected abstract boolean doDelete(T entity);
 
-    public T getCachedItem(String id) {
-        return mCachedItems.get(id);
-    }
-
-    public abstract boolean create(T entity);
-    public abstract T read(Integer id);
-    public abstract List<T> read();
-    public abstract boolean update(T entity);
-    public abstract boolean delete(T entity);
-
-    public interface DataSourceObserver {
-        void onDataChanged();
-    }
 }

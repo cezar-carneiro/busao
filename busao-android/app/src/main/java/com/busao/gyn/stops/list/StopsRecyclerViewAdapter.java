@@ -63,10 +63,6 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         this.dataset = dataset;
     }
 
-    private void fireMapIconClickEvent(BusStop stop){
-        EventBus.getDefault().post(new MapIconClickEvent(stop));
-    }
-
     public void refresh(List<BusStop> data){
         if(data == null) {
             return;
@@ -79,6 +75,17 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         dataset.clear();
         dataset.addAll(data);
         notifyDataSetChanged();
+    }
+
+    public void refreshItem(BusStop item){
+        //TODO: we should something better than this
+        for(int i = 0; i < dataset.size(); i++){
+            if(dataset.get(i).equals(item.getId())){
+                dataset.set(i, item);
+                notifyItemChanged(i);
+            }
+        }
+
     }
 
     public void clear(){
@@ -132,7 +139,6 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
             public void onClick(View v) {
                 stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
                 dataSource.update(stop);
-                dataSource.refreshItems();
             }
         });
 
@@ -157,6 +163,10 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
     @Override
     public int getItemCount() {
         return dataset == null ? 0 : dataset.size();
+    }
+
+    private void fireMapIconClickEvent(BusStop stop){
+        EventBus.getDefault().post(new MapIconClickEvent(stop));
     }
 }
 

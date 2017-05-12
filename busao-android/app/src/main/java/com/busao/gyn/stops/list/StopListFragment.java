@@ -1,11 +1,8 @@
 package com.busao.gyn.stops.list;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,16 +12,19 @@ import android.view.ViewGroup;
 import android.widget.ViewSwitcher;
 
 import com.busao.gyn.R;
-import com.busao.gyn.data.BusStopDataLoader;
 import com.busao.gyn.data.BusStopDataSource;
+import com.busao.gyn.events.BusStopChanged;
 import com.busao.gyn.stops.BusStop;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
 /**
  * Created by cezar on 03/01/17.
  */
-public class StopListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BusStop>> {
+public class StopListFragment extends Fragment {
 
     private ViewSwitcher mStopListViewSwitcher;
 
@@ -48,18 +48,35 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
         stopsRecyclerView.setLayoutManager(layoutManager);
         stopsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        mDataSource = BusStopDataSource.newInstance(getContext());
+        List<BusStop> stops = mDataSource.read();
+        mAdapter = new StopsRecyclerViewAdapter(mDataSource, stops);
         stopsRecyclerView.setAdapter(mAdapter);
-
-        getLoaderManager().initLoader(BusStopDataLoader.ID, null, this);
-
+        switchViews(stops);
         return view;
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mDataSource = BusStopDataSource.getInstance(context.getApplicationContext());
-        mAdapter = new StopsRecyclerViewAdapter(mDataSource);
+    public void onDestroyView(){
+        super.onDestroyView();
+        mDataSource.destroyInstance();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onBusStopChanged(BusStopChanged event){
+        mAdapter.refresh(mDataSource.read());
     }
 
     private void switchViews(List<BusStop> stops) {
@@ -70,28 +87,5 @@ public class StopListFragment extends Fragment implements LoaderManager.LoaderCa
         } else if (R.id.noItemsTextView == mStopListViewSwitcher.getNextView().getId()) {
             mStopListViewSwitcher.showNext();
         }
-    }
-
-    @Override
-    public Loader<List<BusStop>> onCreateLoader(int id, Bundle args) {
-        Loader loader = new BusStopDataLoader(getActivity(), mDataSource);
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<BusStop>> loader, List<BusStop> data) {
-        mAdapter.refresh(data);
-        switchViews(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<BusStop>> loader) {
-        mAdapter.clear();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        BusStopDataSource.destroyInstance();
     }
 }

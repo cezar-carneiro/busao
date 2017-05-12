@@ -5,8 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.busao.gyn.events.BusStopChanged;
 import com.busao.gyn.stops.BusStop;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,28 +32,20 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     public static final String COLUMN_FAVORITE = "favorito";
     public static final String COLUMN_LINES = "linhas";
 
-    private static BusStopDataSource INSTANCE = null;
-
     private BusStopDataSource(Context context) {
         super(context);
     }
 
-    public static BusStopDataSource getInstance(Context context){
-        if(INSTANCE == null) {
-            INSTANCE = new BusStopDataSource(context);
-        }
-        return INSTANCE;
+    public static BusStopDataSource newInstance(Context context){
+        return new BusStopDataSource(context);
     }
 
-    public static void destroyInstance(){
-        if(INSTANCE != null) {
-            INSTANCE.close();
-            INSTANCE = null;
-        }
+    public void destroyInstance(){
+        super.close();
     }
 
     @Override
-    public boolean create(BusStop entity) {
+    protected boolean doCreate(BusStop entity) {
         if (entity == null) {
             return false;
         }
@@ -60,7 +55,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     }
 
     @Override
-    public boolean delete(BusStop entity) {
+    protected boolean doDelete(BusStop entity) {
         if (entity == null) {
             return false;
         }
@@ -70,18 +65,24 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     }
 
     @Override
-    public boolean update(BusStop entity) {
+    protected boolean doUpdate(BusStop entity) {
         if (entity == null) {
             return false;
         }
         int result = mDatabase.update(TABLE_NAME,
                 generateContentValuesFromObject(entity), COLUMN_ID + " = "
                         + entity.getId(), null);
-        return result != 0;
+
+        if(result != 0){
+            EventBus.getDefault().post(new BusStopChanged(entity));
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    public List<BusStop> read() {
+    protected List<BusStop> doRead() {
         Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
                 "\tpontos.codigoPonto,\n" +
                 "\tpontos.latitude,\n" +
@@ -109,7 +110,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     }
 
     @Override
-    public BusStop read(Integer id){
+    protected BusStop doRead(Integer id){
         Cursor cursor = mDatabase.rawQuery("SELECT pontos.id,\n" +
                 "\tpontos.codigoPonto,\n" +
                 "\tpontos.latitude,\n" +

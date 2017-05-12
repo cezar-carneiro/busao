@@ -60,7 +60,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.mDataSource = BusStopDataSource.getInstance(getActivity().getApplicationContext());
+        mDataSource = BusStopDataSource.newInstance(getContext());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -77,9 +77,9 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        BusStopDataSource.destroyInstance();
+    public void onDestroyView() {
+        super.onDestroyView();
+        mDataSource.destroyInstance();
     }
 
     /**
@@ -138,7 +138,6 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                             imageFavorite.setImageResource(R.drawable.ic_favorite_border);
                         }
                         mDataSource.update(stop);
-                        mDataSource.refreshItems();
                         Snackbar.make(BusaoMapFragment.this.getView(), "Ponto " + stop.getCode() + " atualizado.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
