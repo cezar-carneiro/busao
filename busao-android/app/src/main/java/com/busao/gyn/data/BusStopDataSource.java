@@ -187,10 +187,10 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
                     "\tgroup_concat(pontoslinhas.codigoLinha,', ') AS linhas \n" +
                 "FROM pontos \n" +
                 "INNER JOIN pontoslinhas ON pontos.codigoPonto = pontoslinhas.codigoPonto \n" +
-                "WHERE pontos.codigoPonto LIKE '%?%' \n" +
-                    "\tOR pontos.endereco LIKE '%?%'\n" +
-                    "\tOR pontos.pontoReferencia LIKE '%?%'\n" +
-                "GROUP BY pontos.codigoPonto", new String[]{input, input, input});
+                "WHERE pontos.codigoPonto LIKE ? \n" +
+                    "\tOR pontos.endereco LIKE ? \n" +
+                    "\tOR pontos.pontoReferencia LIKE ? \n" +
+                "GROUP BY pontos.codigoPonto\n", new String[]{"%"+input+"%", "%"+input+"%", "%"+input+"%"});
         List<BusStop> stops = new ArrayList<BusStop>();
         if (cursor != null && cursor.moveToFirst()) {
             do {

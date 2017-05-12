@@ -1,10 +1,13 @@
-package com.busao.gyn;
+package com.busao.gyn.search;
 
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -13,6 +16,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.busao.gyn.R;
+import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.stops.BusStop;
 
 import java.util.List;
@@ -20,16 +25,16 @@ import java.util.List;
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         SearchView.OnCloseListener {
 
-    private String mQuery;
     private List<BusStop> mStops;
-    private ViewFlipper searchResultsViewFlipper;
+    private ViewFlipper mSearchResultsViewFlipper;
+
+    private BusStopDataSource mDataSource;
+    private SearchResultsRecyclerViewAdapter mSearchResultsRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-        searchResultsViewFlipper = (ViewFlipper) findViewById(R.id.searchResultsViewFlipper);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -40,8 +45,25 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             }
         });
 
+        mSearchResultsViewFlipper = (ViewFlipper) findViewById(R.id.searchResultsViewFlipper);
+        mDataSource = BusStopDataSource.newInstance(this);
+        RecyclerView searchResultsRecyclerView = (RecyclerView) findViewById(R.id.searchResultsRecyclerView);
+        searchResultsRecyclerView.setHasFixedSize(false);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        searchResultsRecyclerView.setLayoutManager(layoutManager);
+        searchResultsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mSearchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(mDataSource);
+        searchResultsRecyclerView.setAdapter(mSearchResultsRecyclerViewAdapter);
+
         handleIntent(getIntent());
         switchViews();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDataSource.destroyInstance();
     }
 
     @Override
@@ -93,7 +115,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     private void doSearch(String query){
-        this.mQuery = query;
+        mStops = mDataSource.search(query);
+        mSearchResultsRecyclerViewAdapter.refresh(mStops);
 
         switchViews();
     }
@@ -103,12 +126,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         View searchResultsLayout = findViewById(R.id.searchResultsLayout);
         if (mStops == null) {
             noResultsTextView.setText(R.string.search_initial_info);
-            searchResultsViewFlipper.setDisplayedChild(searchResultsViewFlipper.indexOfChild(noResultsTextView));
+            mSearchResultsViewFlipper.setDisplayedChild(mSearchResultsViewFlipper.indexOfChild(noResultsTextView));
         } else if(mStops.size() == 0){
             noResultsTextView.setText(R.string.search_no_results_found);
-            searchResultsViewFlipper.setDisplayedChild(searchResultsViewFlipper.indexOfChild(noResultsTextView));
+            mSearchResultsViewFlipper.setDisplayedChild(mSearchResultsViewFlipper.indexOfChild(noResultsTextView));
         } else {
-            searchResultsViewFlipper.setDisplayedChild(searchResultsViewFlipper.indexOfChild(searchResultsLayout));
+            mSearchResultsViewFlipper.setDisplayedChild(mSearchResultsViewFlipper.indexOfChild(searchResultsLayout));
         }
     }
 

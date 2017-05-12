@@ -1,0 +1,136 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:layout_marginBottom="0.5dp"
+    android:orientation="horizontal"
+    android:weightSum="1.0"
+    android:background="#FFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0.1"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+
+            <TextView
+                android:id="@+id/stopNumberSearchResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8888"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/colorAccent"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="18dp"
+                android:fontFamily="sans-serif"
+                android:text=" - "/>
+
+            <TextView
+                android:id="@+id/streetNameSearchResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Street Name salve o vila nova tetracampeão"
+                android:textColor="@color/colorAccent"
+                android:textSize="18dp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom">
+
+                <TextView
+                    android:id="@+id/districtNameSearchResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="2"
+                    android:text="District Name"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:fontFamily="sans-serif"
+                    android:text=" - "/>
+
+                <TextView
+                    android:id="@+id/cityNameSearchResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:text="City Name"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/stopDescriptionSearchResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:fontFamily="sans-serif"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:text="Bus Stop description, if available"
+                android:textColor="@color/colorAccent"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.9"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/imageFavoriteSearchResult"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_favorite_border" />
+
+    </LinearLayout>
+
+</LinearLayout>
+
