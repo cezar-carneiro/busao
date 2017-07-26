@@ -3,7 +3,7 @@
 
 ## An Android App for consulting Goiânia's bus schedule.
 Goiânia is my home city in Brazil. And with this app I hope to help my community and make people's life a little bit better.
-This app is for my portfolio. I have opened its source for demonstration purposes. If you have found any value in it feel free to contact me.
+This app is for my portfolio. I opened its source for demonstration purposes. If you found any value in it feel free to contact me.
 
 ## How it will work
 You will be able to search across all Bus Stops of Goiânia. You can search by the Bus Stop address, code or reference point. Also, you can navigate on a map seeing all the existing Bus Stops in a given area.
@@ -37,9 +37,10 @@ Once I've finish this (very soon, I hope), I will publish it and you will be abl
 
 ### Progress so far:
 [x] App's main skeleton (Colors, Menus, Tabs, Drawer, Toolbar, etc).
-[x] Search available on the Map.
-[x] Save favorites from the Map.
-[x] Show list of favorite Bus Stops.
-[ ] Search by text (bus stop address, reference point, code, etc).
-[ ] Save favorites from the Search.
-[ ] Show the schedule of a given stop.
+
+[x] Search available on the Map.  
+[x] Save favorites from the Map.  
+[x] Show list of favorite Bus Stops.  
+[ ] Search by text (bus stop address, reference point, code, etc).  
+[ ] Save favorites from the Search.  
+[ ] Show the schedule of a given stop.  
