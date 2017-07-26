@@ -37,10 +37,9 @@ Once I've finish this (very soon, I hope), I will publish it and you will be abl
 
 ### Progress so far:
 [x] App's main skeleton (Colors, Menus, Tabs, Drawer, Toolbar, etc).
-
 [x] Search available on the Map.  
 [x] Save favorites from the Map.  
 [x] Show list of favorite Bus Stops.  
-[ ] Search by text (bus stop address, reference point, code, etc).  
-[ ] Save favorites from the Search.  
-[ ] Show the schedule of a given stop.  
+[  ] Search by text (bus stop address, reference point, code, etc).  
+[  ] Save favorites from the Search.  
+[  ] Show the schedule of a given stop.  
