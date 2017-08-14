@@ -5,18 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 import com.busao.gyn.R;
+import com.busao.gyn.components.RecyclerViewEmptySupport;
 import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.stops.BusStop;
 
@@ -26,9 +24,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         SearchView.OnCloseListener {
 
     private List<BusStop> mStops;
-    private ViewFlipper mSearchResultsViewFlipper;
 
     private BusStopDataSource mDataSource;
+    private TextView mSearchNoResultsInfoFoundTextView;
+    private RecyclerViewEmptySupport searchResultsRecyclerView;
     private SearchResultsRecyclerViewAdapter mSearchResultsRecyclerViewAdapter;
 
     @Override
@@ -45,19 +44,17 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             }
         });
 
-        mSearchResultsViewFlipper = (ViewFlipper) findViewById(R.id.searchResultsViewFlipper);
         mDataSource = BusStopDataSource.newInstance(this);
-        RecyclerView searchResultsRecyclerView = (RecyclerView) findViewById(R.id.searchResultsRecyclerView);
-        searchResultsRecyclerView.setHasFixedSize(false);
+        mSearchNoResultsInfoFoundTextView = (TextView) findViewById(R.id.searchNoResultsInfoFoundTextView);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        searchResultsRecyclerView.setLayoutManager(layoutManager);
-        searchResultsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        searchResultsRecyclerView = (RecyclerViewEmptySupport) findViewById(R.id.searchResultsRecyclerView);
+        searchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        searchResultsRecyclerView.setmEmptyView(mSearchNoResultsInfoFoundTextView);
+
         mSearchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(mDataSource);
         searchResultsRecyclerView.setAdapter(mSearchResultsRecyclerViewAdapter);
 
         handleIntent(getIntent());
-        switchViews();
     }
 
     @Override
@@ -114,24 +111,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         return false;
     }
 
-    private void doSearch(String query){
+    private void doSearch(String query) {
         mStops = mDataSource.search(query);
         mSearchResultsRecyclerViewAdapter.refresh(mStops);
-
-        switchViews();
-    }
-
-    private void switchViews() {
-        TextView noResultsTextView = (TextView) findViewById(R.id.searchNoResultsInfoFoundTextView);
-        View searchResultsLayout = findViewById(R.id.searchResultsLayout);
-        if (mStops == null) {
-            noResultsTextView.setText(R.string.search_initial_info);
-            mSearchResultsViewFlipper.setDisplayedChild(mSearchResultsViewFlipper.indexOfChild(noResultsTextView));
-        } else if(mStops.size() == 0){
-            noResultsTextView.setText(R.string.search_no_results_found);
-            mSearchResultsViewFlipper.setDisplayedChild(mSearchResultsViewFlipper.indexOfChild(noResultsTextView));
-        } else {
-            mSearchResultsViewFlipper.setDisplayedChild(mSearchResultsViewFlipper.indexOfChild(searchResultsLayout));
+        if(mStops == null || mStops.size() == 0) {
+            mSearchNoResultsInfoFoundTextView.setText("Nenhum resultado encontrado!");
         }
     }
 
