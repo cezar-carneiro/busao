@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
@@ -20,14 +21,10 @@ import com.busao.gyn.stops.BusStop;
 
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
-        SearchView.OnCloseListener {
-
-    private List<BusStop> mStops;
+public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
 
     private BusStopDataSource mDataSource;
     private TextView mSearchNoResultsInfoFoundTextView;
-    private RecyclerViewEmptySupport searchResultsRecyclerView;
     private SearchResultsRecyclerViewAdapter mSearchResultsRecyclerViewAdapter;
 
     @Override
@@ -47,7 +44,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         mDataSource = BusStopDataSource.newInstance(this);
         mSearchNoResultsInfoFoundTextView = (TextView) findViewById(R.id.searchNoResultsInfoFoundTextView);
 
-        searchResultsRecyclerView = (RecyclerViewEmptySupport) findViewById(R.id.searchResultsRecyclerView);
+        RecyclerViewEmptySupport searchResultsRecyclerView = (RecyclerViewEmptySupport) findViewById(R.id.searchResultsRecyclerView);
         searchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         searchResultsRecyclerView.setmEmptyView(mSearchNoResultsInfoFoundTextView);
 
@@ -71,16 +68,15 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.search_activity_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.search_activity_search_item);
         SearchView search = (SearchView) menuItem.getActionView();
         menuItem.expandActionView();
-        // Associate searchable configuration with the SearchView
+        MenuItemCompat.setOnActionExpandListener(menuItem, this);
+
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         search.setOnQueryTextListener(this);
-        search.setOnCloseListener(this);
         search.setIconifiedByDefault(false);
         search.setIconified(false);
         search.requestFocus();
@@ -95,12 +91,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     @Override
-    public boolean onClose() {
-        finish();
-        return false;
-    }
-
-    @Override
     public boolean onQueryTextSubmit(String query) {
         doSearch(query);
         return true;
@@ -112,11 +102,25 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     private void doSearch(String query) {
-        mStops = mDataSource.search(query);
-        mSearchResultsRecyclerViewAdapter.refresh(mStops);
+        List<BusStop> mStops = mDataSource.search(query);
         if(mStops == null || mStops.size() == 0) {
             mSearchNoResultsInfoFoundTextView.setText("Nenhum resultado encontrado!");
+            mSearchResultsRecyclerViewAdapter.clear();
+            return;
         }
+        mSearchResultsRecyclerViewAdapter.setQuery(query);
+        mSearchResultsRecyclerViewAdapter.refresh(mStops);
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        finish();
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        return true;
     }
 
 }

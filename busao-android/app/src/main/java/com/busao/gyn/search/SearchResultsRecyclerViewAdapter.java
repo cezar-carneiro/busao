@@ -3,6 +3,9 @@ package com.busao.gyn.search;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +15,10 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.ScheduleActivity;
 import com.busao.gyn.data.AbstractDataSource;
-import com.busao.gyn.events.BusStopChanged;
-import com.busao.gyn.events.MapIconClickEvent;
 import com.busao.gyn.stops.BusStop;
 import com.busao.gyn.util.BusStopUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
 
     private List<BusStop> dataset;
     private AbstractDataSource dataSource;
+    private String query;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -58,6 +59,10 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     public SearchResultsRecyclerViewAdapter(AbstractDataSource dataSource, List<BusStop> dataset) {
         this.dataSource = dataSource;
         this.dataset = dataset;
+    }
+
+    public void setQuery(String query){
+        this.query = query;
     }
 
     public void refresh(List<BusStop> data){
@@ -97,8 +102,10 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         final BusStop stop = dataset.get(position);
         String code = BusStopUtils.formatBusStop(dataset.get(position).getCode());
 
-        holder.stopNumberSearchResult.setText(code);
-        holder.streetNameSearchResult.setText(stop.getAddress());
+//        holder.stopNumberSearchResult.setText(code);
+        highlight(code, query, holder.stopNumberSearchResult);
+//        holder.streetNameSearchResult.setText(stop.getAddress());
+        highlight(stop.getAddress(), query, holder.streetNameSearchResult);
         holder.districtNameSearchResult.setText(stop.getNeighborhood());
 
         if(StringUtils.isEmpty(stop.getReference())){
@@ -106,8 +113,9 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
 //            holder.stopDescription.setText("(Sem descrição disponível)");
 //            holder.stopDescription.setTypeface(null, Typeface.ITALIC);
         }else{
-            holder.stopDescriptionSearchResult.setText(stop.getReference());
             holder.stopDescriptionSearchResult.setTypeface(null, Typeface.NORMAL);
+//            holder.stopDescriptionSearchResult.setText(stop.getReference());
+            highlight(stop.getReference(), query, holder.stopDescriptionSearchResult);
         }
 
         holder.cityNameSearchResult.setText(stop.getCity());
@@ -145,6 +153,24 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     @Override
     public int getItemCount() {
         return dataset == null ? 0 : dataset.size();
+    }
+
+    private void highlight(String text, String span, TextView textView){
+        if (StringUtils.isEmpty(span)) {
+            textView.setText(text);
+            return;
+        }
+        int start = text.toLowerCase().indexOf(span.toLowerCase());
+        if (start < 0) {
+            textView.setText(text);
+            return;
+        }
+        int end = start + span.length();
+
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new BackgroundColorSpan(0xFFFF9100), start, end, 0);
+        spannable.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), start, end, 0);
+        textView.setText(spannable);
     }
 
 }
