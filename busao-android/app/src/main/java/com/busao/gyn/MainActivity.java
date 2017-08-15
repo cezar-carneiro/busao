@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
             } else {
-                //TODO: o q fazer?
+                ;//TODO: o q fazer?
             }
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions

@@ -1,14 +1,9 @@
 package com.busao.gyn.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.greenrobot.eventbus.EventBus;
+import java.util.List;
 
 /**
  * Created by cezar on 23/01/17.

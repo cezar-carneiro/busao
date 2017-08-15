@@ -5,23 +5,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
 import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.events.BusStopChanged;
-import com.busao.gyn.stops.BusStop;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.List;
 
 /**
  * Created by cezar on 03/01/17.

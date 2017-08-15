@@ -3,9 +3,6 @@ package com.busao.gyn.search;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +14,7 @@ import com.busao.gyn.ScheduleActivity;
 import com.busao.gyn.data.AbstractDataSource;
 import com.busao.gyn.stops.BusStop;
 import com.busao.gyn.util.BusStopUtils;
+import com.busao.gyn.util.TextViewUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -102,20 +100,15 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         final BusStop stop = dataset.get(position);
         String code = BusStopUtils.formatBusStop(dataset.get(position).getCode());
 
-//        holder.stopNumberSearchResult.setText(code);
-        highlight(code, query, holder.stopNumberSearchResult);
-//        holder.streetNameSearchResult.setText(stop.getAddress());
-        highlight(stop.getAddress(), query, holder.streetNameSearchResult);
+        TextViewUtils.highlight(code, query, holder.stopNumberSearchResult);
+        TextViewUtils.highlight(stop.getAddress(), query, holder.streetNameSearchResult);
         holder.districtNameSearchResult.setText(stop.getNeighborhood());
 
         if(StringUtils.isEmpty(stop.getReference())){
             holder.stopDescriptionSearchResult.setVisibility(View.GONE);
-//            holder.stopDescription.setText("(Sem descrição disponível)");
-//            holder.stopDescription.setTypeface(null, Typeface.ITALIC);
         }else{
             holder.stopDescriptionSearchResult.setTypeface(null, Typeface.NORMAL);
-//            holder.stopDescriptionSearchResult.setText(stop.getReference());
-            highlight(stop.getReference(), query, holder.stopDescriptionSearchResult);
+            TextViewUtils.highlight(stop.getReference(), query, holder.stopDescriptionSearchResult);
         }
 
         holder.cityNameSearchResult.setText(stop.getCity());
@@ -153,24 +146,6 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     @Override
     public int getItemCount() {
         return dataset == null ? 0 : dataset.size();
-    }
-
-    private void highlight(String text, String span, TextView textView){
-        if (StringUtils.isEmpty(span)) {
-            textView.setText(text);
-            return;
-        }
-        int start = text.toLowerCase().indexOf(span.toLowerCase());
-        if (start < 0) {
-            textView.setText(text);
-            return;
-        }
-        int end = start + span.length();
-
-        SpannableString spannable = new SpannableString(text);
-        spannable.setSpan(new BackgroundColorSpan(0xFFFF9100), start, end, 0);
-        spannable.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), start, end, 0);
-        textView.setText(spannable);
     }
 
 }
