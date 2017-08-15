@@ -5,34 +5,25 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-        <ViewSwitcher
+        <TextView
+            android:id="@+id/stopListNoFavoritesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:fontFamily="casual"
+            android:text="Você ainda não possui pontos favoritos. Marque pontos como favoritos através da Busca ou na aba 'MAPA'."
+            android:textAlignment="center"
+            android:textColor="#ff9100"
+            android:textSize="18dp"
+            android:visibility="gone"/>
+
+        <com.busao.gyn.components.RecyclerViewEmptySupport
+            android:id="@+id/stopListRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/stopListViewSwitcher"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/stopListRecyclerView"
-                    android:scrollbars="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/grey"/>
-
-                <TextView
-                    android:id="@+id/noItemsTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:textAlignment="center"
-                    android:textSize="18dp"
-                    android:textColor="#ff9100"
-                    android:fontFamily="casual"
-                    android:text="Você ainda não possui pontos favoritos. Marque pontos como favoritos através da Busca ou na aba 'MAPA'."
-                    android:layout_centerVertical="true" />
-        </ViewSwitcher>
-
+            android:layout_height="wrap_content"
+            android:background="@color/grey"
+            android:scrollbars="vertical" />
 
 </RelativeLayout>
