@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.busao.gyn.events.BusStopChanged;
-import com.busao.gyn.stops.BusStop;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,6 +21,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
     public static final String TABLE_NAME = "pontos";
 
     public static final String COLUMN_ID = "id";
+
     public static final String COLUMN_CODE = "codigoPonto";
     public static final String COLUMN_LATITUDE = "latitude";
     public static final String COLUMN_LONGITUDE = "longitude";
@@ -222,10 +222,10 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
         try{
             int favorite = cursor.getInt(cursor.getColumnIndex(COLUMN_FAVORITE));
             if(favorite > 0) {
-                stop.setFavorite(true);
+                stop.setFavorite(1);
             }
         }catch (Exception e){
-            stop.setFavorite(false);
+            stop.setFavorite(0);
         }
         stop.setLines(cursor.getString(cursor.getColumnIndex(COLUMN_LINES)));
 
@@ -243,8 +243,7 @@ public class BusStopDataSource extends AbstractDataSource<BusStop> {
         values.put(COLUMN_ADDRESS, entity.getAddress());
         values.put(COLUMN_NEIGHBORHOOD, entity.getNeighborhood());
         values.put(COLUMN_REFERENCE, entity.getReference());
-        values.put(COLUMN_FAVORITE, entity.getFavorite() ? 1 : 0);
-//        values.put(COLUMN_LINES, entity.getLines());
+        values.put(COLUMN_FAVORITE, entity.getFavorite());
 
         return values;
     }

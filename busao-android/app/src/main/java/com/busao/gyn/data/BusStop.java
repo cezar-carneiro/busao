@@ -1,23 +1,43 @@
-package com.busao.gyn.stops;
+package com.busao.gyn.data;
+
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
 /**
  * Created by cezar on 23/01/17.
  */
-
+@Entity(tableName = "pontos")
 public class BusStop implements Serializable{
 
+    @PrimaryKey
     private Integer id;
+
+    @ColumnInfo(name = "codigoPonto")
     private Integer code;
+
+    @ColumnInfo(name = "latitude")
     private Double latitude;
+
+    @ColumnInfo(name = "longitude")
     private Double longitude;
+
+    @ColumnInfo(name = "endereco")
     private String address;
+
+    @ColumnInfo(name = "bairro")
     private String neighborhood;
+
+    @ColumnInfo(name = "cidade")
     private String city;
+
+    @ColumnInfo(name = "pontoReferencia")
     private String reference;
-    private Boolean favorite;
-    private String lines;
+
+    @ColumnInfo(name = "favorito")
+    private Integer favorite;
 
     public Integer getId() {
         return id;
@@ -83,19 +103,12 @@ public class BusStop implements Serializable{
         this.reference = reference;
     }
 
-    public Boolean getFavorite() {
+    public Integer getFavorite() {
         return favorite;
     }
 
-    public void setFavorite(Boolean favorite) {
+    public void setFavorite(Integer favorite) {
         this.favorite = favorite;
     }
 
-    public String getLines() {
-        return lines;
-    }
-
-    public void setLines(String lines) {
-        this.lines = lines;
-    }
 }

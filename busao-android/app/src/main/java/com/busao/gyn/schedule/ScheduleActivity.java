@@ -1,4 +1,4 @@
-package com.busao.gyn;
+package com.busao.gyn.schedule;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +10,8 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.busao.gyn.stops.BusStop;
+import com.busao.gyn.R;
+import com.busao.gyn.data.BusStop;
 import com.busao.gyn.util.BusStopUtils;
 
 import org.jsoup.Jsoup;

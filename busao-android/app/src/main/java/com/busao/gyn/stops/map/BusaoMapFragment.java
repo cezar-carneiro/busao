@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.data.BusStopDataSource;
 import com.busao.gyn.events.MapIconClickEvent;
-import com.busao.gyn.stops.BusStop;
+import com.busao.gyn.data.BusStop;
 import com.busao.gyn.util.BusStopUtils;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;

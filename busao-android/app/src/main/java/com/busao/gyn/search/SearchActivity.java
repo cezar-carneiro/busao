@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
 import com.busao.gyn.data.BusStopDataSource;
-import com.busao.gyn.stops.BusStop;
+import com.busao.gyn.data.BusStop;
 
 import java.util.List;
 

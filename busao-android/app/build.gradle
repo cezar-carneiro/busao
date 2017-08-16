@@ -35,9 +35,15 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:percent:24.2.1'
+
     compile 'com.google.android.gms:play-services-maps:9.4.0'
+
+    compile 'android.arch.persistence.room:runtime:1.0.0-alpha5'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'org.jsoup:jsoup:1.10.2'
+
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha5"
+
     testCompile 'junit:junit:4.12'
 }
