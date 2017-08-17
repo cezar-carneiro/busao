@@ -2,6 +2,7 @@ package com.busao.gyn.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -109,6 +110,16 @@ public class BusStop implements Serializable{
 
     public void setFavorite(Integer favorite) {
         this.favorite = favorite;
+    }
+
+    @Ignore
+    public void setFavorite(boolean isFavorite) {
+        this.favorite = (isFavorite ? 1 : 0);
+    }
+
+    @Ignore
+    public boolean isFavorite(){
+        return (favorite != null && favorite == 1);
     }
 
 }

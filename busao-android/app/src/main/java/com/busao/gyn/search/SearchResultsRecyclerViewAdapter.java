@@ -113,7 +113,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
 
         holder.cityNameSearchResult.setText(stop.getCity());
 
-        if(stop.getFavorite() != null && stop.getFavorite()){
+        if(stop.isFavorite()){
             holder.imageFavoriteSearchResult.setImageResource(R.drawable.ic_favorite);
         }else{
             holder.imageFavoriteSearchResult.setImageResource(R.drawable.ic_favorite_border);
@@ -122,8 +122,8 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         holder.imageFavoriteSearchResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
-                if(stop.getFavorite() != null && stop.getFavorite()){
+                stop.setFavorite(!stop.isFavorite());
+                if(stop.isFavorite()){
                     holder.imageFavoriteSearchResult.setImageResource(R.drawable.ic_favorite);
                 }else{
                     holder.imageFavoriteSearchResult.setImageResource(R.drawable.ic_favorite_border);

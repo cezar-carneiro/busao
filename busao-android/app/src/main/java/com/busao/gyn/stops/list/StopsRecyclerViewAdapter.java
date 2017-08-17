@@ -137,7 +137,7 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         holder.imageDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
+                stop.setFavorite(!stop.isFavorite());
                 dataSource.update(stop);
             }
         });

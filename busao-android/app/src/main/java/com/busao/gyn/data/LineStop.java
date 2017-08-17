@@ -18,7 +18,7 @@ public class LineStop {
     private Integer stop;
 
     @ColumnInfo(name = "codigoLinha")
-    private Integer linha;
+    private Integer line;
 
     public LineStop() {
 
@@ -40,11 +40,11 @@ public class LineStop {
         this.stop = stop;
     }
 
-    public Integer getLinha() {
-        return linha;
+    public Integer getLine() {
+        return line;
     }
 
-    public void setLinha(Integer linha) {
-        this.linha = linha;
+    public void setLine(Integer line) {
+        this.line = line;
     }
 }

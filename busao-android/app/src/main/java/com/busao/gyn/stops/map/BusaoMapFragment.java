@@ -121,7 +121,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                 linesAvailable.setText(stop.getLines());
                 final ImageView imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
 
-                if(stop.getFavorite() != null && stop.getFavorite() ){
+                if(stop.isFavorite() ){
                     imageFavorite.setImageResource(R.drawable.ic_favorite);
                 }else{
                     imageFavorite.setImageResource(R.drawable.ic_favorite_border);
@@ -131,8 +131,8 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                     @Override
                     public void onClick(View v) {
                         BusStop stop = (BusStop) marker.getTag();
-                        stop.setFavorite(stop.getFavorite() == null ? true : !stop.getFavorite());
-                        if(stop.getFavorite() != null && stop.getFavorite() ){
+                        stop.setFavorite(!stop.isFavorite());
+                        if(stop.isFavorite() ){
                             imageFavorite.setImageResource(R.drawable.ic_favorite);
                         }else{
                             imageFavorite.setImageResource(R.drawable.ic_favorite_border);
