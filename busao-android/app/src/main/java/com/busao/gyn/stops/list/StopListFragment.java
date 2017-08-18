@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
-import com.busao.gyn.data.BusStopDataSource;
+import com.busao.gyn.data.BusaoDatabase;
+import com.busao.gyn.data.IBusStopDataSource;
+import com.busao.gyn.data.stop.BusStopDataSource;
 import com.busao.gyn.events.BusStopChanged;
 
 import org.greenrobot.eventbus.EventBus;
@@ -25,7 +27,7 @@ public class StopListFragment extends Fragment {
 
     private StopsRecyclerViewAdapter mAdapter;
 
-    private BusStopDataSource mDataSource;
+    private IBusStopDataSource mDataSource;
 
     @Nullable
     @Override
@@ -43,7 +45,7 @@ public class StopListFragment extends Fragment {
         stopsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         stopsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mDataSource = BusStopDataSource.newInstance(getContext());
+        mDataSource = new BusStopDataSource(BusaoDatabase.getInstance(getContext()).busStopDao());
         mAdapter = new StopsRecyclerViewAdapter(mDataSource);
         stopsRecyclerView.setAdapter(mAdapter);
         return view;
@@ -52,14 +54,13 @@ public class StopListFragment extends Fragment {
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        mDataSource.destroyInstance();
     }
 
     @Override
     public void onStart(){
         super.onStart();
         EventBus.getDefault().register(this);
-        mAdapter.refresh(mDataSource.read());
+        mAdapter.refresh(mDataSource.readFavorites());
     }
 
     @Override
@@ -70,7 +71,7 @@ public class StopListFragment extends Fragment {
 
     @Subscribe
     public void onBusStopChanged(BusStopChanged event){
-        mAdapter.refresh(mDataSource.read());
+        mAdapter.refresh(mDataSource.readFavorites());
     }
 
 }

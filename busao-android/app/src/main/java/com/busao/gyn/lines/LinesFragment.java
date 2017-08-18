@@ -12,8 +12,9 @@ import android.widget.TextView;
 
 import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
-import com.busao.gyn.data.BusLineDataSource;
-import com.busao.gyn.data.BusStopDataSource;
+import com.busao.gyn.data.BusaoDatabase;
+import com.busao.gyn.data.IBusLineDataSource;
+import com.busao.gyn.data.line.BusLineDataSource;
 
 /**
  * Created by cezar on 20/03/2017.
@@ -23,7 +24,7 @@ public class LinesFragment extends Fragment {
 
     private LinesRecyclerViewAdapter mAdapter;
 
-    private BusLineDataSource mDataSource;
+    private IBusLineDataSource mDataSource;
 
     @Nullable
     @Override
@@ -41,7 +42,7 @@ public class LinesFragment extends Fragment {
         stopsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         stopsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mDataSource = BusLineDataSource.newInstance(getContext());
+        mDataSource = new BusLineDataSource(BusaoDatabase.getInstance(getContext()).busLineDao());
         mAdapter = new LinesRecyclerViewAdapter(mDataSource);
         stopsRecyclerView.setAdapter(mAdapter);
         return view;

@@ -14,9 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
-import com.busao.gyn.data.BusStopDataSource;
+import com.busao.gyn.data.BusaoDatabase;
+import com.busao.gyn.data.IBusStopDataSource;
+import com.busao.gyn.data.stop.BusStop;
+import com.busao.gyn.data.stop.BusStopDataSource;
+import com.busao.gyn.data.stop.BusStopWithLines;
 import com.busao.gyn.events.MapIconClickEvent;
-import com.busao.gyn.data.BusStop;
 import com.busao.gyn.util.BusStopUtils;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,7 +51,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     private List<Marker> mMarkers = new ArrayList<Marker>();
     private Circle mLocationCircle;
 
-    private BusStopDataSource mDataSource;
+    private IBusStopDataSource mDataSource;
 
     public BusaoMapFragment(){
         getMapAsync(this);
@@ -60,7 +63,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mDataSource = BusStopDataSource.newInstance(getContext());
+        mDataSource = new BusStopDataSource(BusaoDatabase.getInstance(getContext()).busStopDao());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -74,12 +77,6 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     public void onStop(){
         super.onStop();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mDataSource.destroyInstance();
     }
 
     /**
@@ -102,26 +99,26 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
             public boolean onMarkerClick(final Marker marker) {
                 View v = getActivity().getLayoutInflater().inflate(R.layout.stop_details_map_dialog, null);
 
-                BusStop stop = (BusStop) marker.getTag();
+                BusStopWithLines stop = (BusStopWithLines) marker.getTag();
 
                 TextView districtName = (TextView) v.findViewById(R.id.district_name);
-                districtName.setText(stop.getNeighborhood());
+                districtName.setText(stop.getStop().getNeighborhood());
                 TextView cityName = (TextView) v.findViewById(R.id.city_name);
-                cityName.setText(stop.getCity());
+                cityName.setText(stop.getStop().getCity());
                 TextView stopDescription = (TextView) v.findViewById(R.id.stop_description);
-                if(StringUtils.isEmpty(stop.getReference())){
+                if(StringUtils.isEmpty(stop.getStop().getReference())){
                     //stopDescription.setVisibility(View.GONE);
                     stopDescription.setText("(Sem descrição disponível)");
                     stopDescription.setTypeface(null, Typeface.ITALIC);
                 }else{
-                    stopDescription.setText(stop.getReference());
+                    stopDescription.setText(stop.getStop().getReference());
                     stopDescription.setTypeface(null, Typeface.NORMAL);
                 }
                 TextView linesAvailable = (TextView) v.findViewById(R.id.lines_available);
-                linesAvailable.setText(stop.getLines());
+                linesAvailable.setText(stop.getFormatedLines());
                 final ImageView imageFavorite = (ImageView) v.findViewById(R.id.imageFavorite);
 
-                if(stop.isFavorite() ){
+                if(stop.getStop().isFavorite()){
                     imageFavorite.setImageResource(R.drawable.ic_favorite);
                 }else{
                     imageFavorite.setImageResource(R.drawable.ic_favorite_border);
@@ -143,9 +140,8 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                     }
                 });
 
-
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.StopDetailsMapDialogStyle);
-                dialogBuilder.setTitle(BusStopUtils.formatBusStop(stop.getCode(), stop.getAddress()));
+                dialogBuilder.setTitle(BusStopUtils.formatBusStop(stop.getStop().getCode(), stop.getStop().getAddress()));
                 dialogBuilder.setView(v);
                 dialogBuilder.setNegativeButton("CLOSE", null);
                 AlertDialog dialog = dialogBuilder.create();
@@ -187,12 +183,12 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         createCircle(ll);
 
         LatLng[] area = GeometryUtils.areaNearPosition(new LatLng(ll.latitude, ll.longitude), 500);
-        List list = mDataSource.search(area);
+        List list = mDataSource.searchByLocation(area);
         refreshMarkers(list);
     }
 
     private void createCircle(LatLng ll) {
-        if(mLocationCircle == null){
+        if (mLocationCircle == null) {
             mLocationCircle = mGoogleMap.addCircle(new CircleOptions()
                     .center(ll)
                     .radius(500)
@@ -204,10 +200,10 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         }
     }
 
-    private void refreshMarkers(List<BusStop> stops){
+    private void refreshMarkers(List<BusStopWithLines> stops){
         clearMarkers();
 
-        for(BusStop stop : stops){
+        for(BusStopWithLines stop : stops){
             createMarker(stop);
         }
     }
@@ -220,9 +216,9 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         mMarkers.clear();
     }
 
-    private void createMarker(BusStop stop) {
-        MarkerOptions mo = new MarkerOptions().position(new LatLng(stop.getLatitude(), stop.getLongitude()))
-                .title(String.valueOf(stop.getCode())).snippet(stop.getAddress());
+    private void createMarker(BusStopWithLines stop) {
+        MarkerOptions mo = new MarkerOptions().position(new LatLng(stop.getStop().getLatitude(), stop.getStop().getLongitude()))
+                .title(String.valueOf(stop.getStop().getCode())).snippet(stop.getStop().getAddress());
         Marker marker = mGoogleMap.addMarker(mo);
         marker.setTag(stop);
         mMarkers.add(marker);
@@ -235,7 +231,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17), 2000, null);
     }
 
-    public void showSingleStop(final BusStop stop) {
+    public void showSingleStop(final BusStopWithLines stop) {
         if(mGoogleMap == null){
             return;
         }
@@ -246,7 +242,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         }
         clearMarkers();
         createMarker(stop);
-        changeCamera(new LatLng(stop.getLatitude(), stop.getLongitude()));
+        changeCamera(new LatLng(stop.getStop().getLatitude(), stop.getStop().getLongitude()));
     }
 
     @Subscribe

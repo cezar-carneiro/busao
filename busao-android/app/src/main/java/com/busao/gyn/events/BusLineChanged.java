@@ -1,6 +1,6 @@
 package com.busao.gyn.events;
 
-import com.busao.gyn.data.BusLine;
+import com.busao.gyn.data.line.BusLine;
 
 /**
  * Created by cezar.carneiro on 17/08/2017.

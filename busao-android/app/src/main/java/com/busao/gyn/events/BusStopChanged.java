@@ -1,6 +1,6 @@
 package com.busao.gyn.events;
 
-import com.busao.gyn.data.BusStop;
+import com.busao.gyn.data.stop.BusStop;
 
 /**
  * Created by cezar.carneiro on 12/05/2017.

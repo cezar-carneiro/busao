@@ -1,16 +1,19 @@
-package com.busao.gyn.data;
+package com.busao.gyn.data.stop;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Relation;
 
+import com.busao.gyn.data.LineStop;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by cezar.carneiro on 16/08/2017.
  */
 
-public class BusStopWithLines {
+public class BusStopWithLines implements Serializable {
 
     @Embedded
     private BusStop stop;

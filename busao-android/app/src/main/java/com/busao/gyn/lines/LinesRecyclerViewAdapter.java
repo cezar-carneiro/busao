@@ -1,7 +1,5 @@
 package com.busao.gyn.lines;
 
-import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
-import com.busao.gyn.data.AbstractDataSource;
-import com.busao.gyn.data.BusLine;
-import com.busao.gyn.data.BusStop;
-import com.busao.gyn.events.MapIconClickEvent;
-import com.busao.gyn.schedule.ScheduleActivity;
+import com.busao.gyn.data.IBusLineDataSource;
+import com.busao.gyn.data.line.BusLine;
 import com.busao.gyn.util.BusStopUtils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -28,8 +20,8 @@ import java.util.List;
 
 public class LinesRecyclerViewAdapter extends RecyclerView.Adapter<LinesRecyclerViewAdapter.ViewHolder> {
 
-    private List<BusLine> dataset;
-    private AbstractDataSource dataSource;
+    private List<BusLine> mDataset;
+    private IBusLineDataSource mDataSource;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -49,44 +41,44 @@ public class LinesRecyclerViewAdapter extends RecyclerView.Adapter<LinesRecycler
         }
     }
 
-    public LinesRecyclerViewAdapter(AbstractDataSource dataSource) {
+    public LinesRecyclerViewAdapter(IBusLineDataSource dataSource) {
         this(dataSource, null);
     }
 
-    public LinesRecyclerViewAdapter(AbstractDataSource dataSource, List<BusLine> dataset) {
-        this.dataSource = dataSource;
-        this.dataset = dataset;
+    public LinesRecyclerViewAdapter(IBusLineDataSource dataSource, List<BusLine> dataset) {
+        this.mDataSource = dataSource;
+        this.mDataset = dataset;
     }
 
     public void refresh(List<BusLine> data){
         if(data == null) {
             return;
         }
-        if(dataset == null) {
-            dataset = data;
+        if(mDataset == null) {
+            mDataset = data;
             notifyDataSetChanged();
             return;
         }
-        dataset.clear();
-        dataset.addAll(data);
+        mDataset.clear();
+        mDataset.addAll(data);
         notifyDataSetChanged();
     }
 
     public void refreshItem(BusLine item){
         //TODO: we should do something better than this
-        for(int i = 0; i < dataset.size(); i++){
-            if(dataset.get(i).equals(item.getId())){
-                dataset.set(i, item);
+        for(int i = 0; i < mDataset.size(); i++){
+            if(mDataset.get(i).equals(item.getId())){
+                mDataset.set(i, item);
                 notifyItemChanged(i);
             }
         }
     }
 
     public void clear(){
-        if(dataset == null){
+        if(mDataset == null){
             return;
         }
-        dataset.clear();
+        mDataset.clear();
         notifyDataSetChanged();
     }
 
@@ -99,10 +91,10 @@ public class LinesRecyclerViewAdapter extends RecyclerView.Adapter<LinesRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (dataset == null || dataset.size() == 0) {
+        if (mDataset == null || mDataset.size() == 0) {
             return;
         }
-        final BusLine line = dataset.get(position);
+        final BusLine line = mDataset.get(position);
         String code = BusStopUtils.formatBusStop(line.getCode());
 
         holder.lineCodeTextView.setText(code);
@@ -118,7 +110,7 @@ public class LinesRecyclerViewAdapter extends RecyclerView.Adapter<LinesRecycler
                 } else {
                     holder.favoriteLineImageView.setImageResource(R.drawable.ic_favorite_border);
                 }
-                dataSource.update(line);
+                mDataSource.update(line);
             }
         });
 
@@ -133,7 +125,7 @@ public class LinesRecyclerViewAdapter extends RecyclerView.Adapter<LinesRecycler
 
     @Override
     public int getItemCount() {
-        return dataset == null ? 0 : dataset.size();
+        return mDataset == null ? 0 : mDataset.size();
     }
 
     private void fireMapIconClickEvent(BusLine line){

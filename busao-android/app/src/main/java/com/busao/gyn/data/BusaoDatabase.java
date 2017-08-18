@@ -5,6 +5,11 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.busao.gyn.data.line.BusLine;
+import com.busao.gyn.data.line.BusLineDao;
+import com.busao.gyn.data.stop.BusStop;
+import com.busao.gyn.data.stop.BusStopDao;
+
 /**
  * Created by cezar.carneiro on 17/08/2017.
  */

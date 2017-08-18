@@ -16,14 +16,17 @@ import android.widget.TextView;
 
 import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
-import com.busao.gyn.data.BusStopDataSource;
-import com.busao.gyn.data.BusStop;
+import com.busao.gyn.data.BusaoDatabase;
+import com.busao.gyn.data.IBusStopDataSource;
+import com.busao.gyn.data.stop.BusStop;
+import com.busao.gyn.data.stop.BusStopDataSource;
+import com.busao.gyn.data.stop.BusStopWithLines;
 
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
 
-    private BusStopDataSource mDataSource;
+    private IBusStopDataSource mDataSource;
     private TextView mSearchNoResultsInfoFoundTextView;
     private SearchResultsRecyclerViewAdapter mSearchResultsRecyclerViewAdapter;
 
@@ -41,7 +44,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             }
         });
 
-        mDataSource = BusStopDataSource.newInstance(this);
+        mDataSource = new BusStopDataSource(BusaoDatabase.getInstance(this).busStopDao());
         mSearchNoResultsInfoFoundTextView = (TextView) findViewById(R.id.searchNoResultsInfoFoundTextView);
 
         RecyclerViewEmptySupport searchResultsRecyclerView = (RecyclerViewEmptySupport) findViewById(R.id.searchResultsRecyclerView);
@@ -57,7 +60,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDataSource.destroyInstance();
     }
 
     @Override
@@ -102,7 +104,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     private void doSearch(String query) {
-        List<BusStop> mStops = mDataSource.search(query);
+        List<BusStopWithLines> mStops = mDataSource.searchByText(query);
         if(mStops == null || mStops.size() == 0) {
             mSearchNoResultsInfoFoundTextView.setText("Nenhum resultado encontrado!");
             mSearchResultsRecyclerViewAdapter.clear();

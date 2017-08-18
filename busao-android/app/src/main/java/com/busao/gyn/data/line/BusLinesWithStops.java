@@ -1,7 +1,9 @@
-package com.busao.gyn.data;
+package com.busao.gyn.data.line;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Relation;
+
+import com.busao.gyn.data.LineStop;
 
 import java.util.List;
 
@@ -17,11 +19,27 @@ public class BusLinesWithStops {
     @Relation(
             parentColumn = "codigo",
             entityColumn = "codigoPonto",
-            entity = BusLine.class,
+            entity = LineStop.class,
             projection = {"codigoPonto"})
     private List<LineStop> stops;
 
     public BusLinesWithStops() {
 
+    }
+
+    public BusLine getLine() {
+        return line;
+    }
+
+    public void setLine(BusLine line) {
+        this.line = line;
+    }
+
+    public List<LineStop> getStops() {
+        return stops;
+    }
+
+    public void setStops(List<LineStop> stops) {
+        this.stops = stops;
     }
 }

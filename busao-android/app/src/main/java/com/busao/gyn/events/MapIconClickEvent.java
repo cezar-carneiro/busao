@@ -1,6 +1,7 @@
 package com.busao.gyn.events;
 
-import com.busao.gyn.data.BusStop;
+import com.busao.gyn.data.stop.BusStop;
+import com.busao.gyn.data.stop.BusStopWithLines;
 
 /**
  * Created by cezar.carneiro on 11/05/2017.
@@ -8,13 +9,13 @@ import com.busao.gyn.data.BusStop;
 
 public class MapIconClickEvent {
 
-    private BusStop stop;
+    private BusStopWithLines stop;
 
-    public MapIconClickEvent(BusStop stop) {
+    public MapIconClickEvent(BusStopWithLines stop) {
         this.stop = stop;
     }
 
-    public BusStop getStop() {
+    public BusStopWithLines getStop() {
         return stop;
     }
 }

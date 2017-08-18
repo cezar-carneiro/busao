@@ -1,4 +1,4 @@
-package com.busao.gyn.data;
+package com.busao.gyn.data.line;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;

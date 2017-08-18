@@ -11,7 +11,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
-import com.busao.gyn.data.BusStop;
+import com.busao.gyn.data.stop.BusStop;
+import com.busao.gyn.data.stop.BusStopWithLines;
 import com.busao.gyn.util.BusStopUtils;
 
 import org.jsoup.Jsoup;
@@ -38,7 +39,7 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         });
 
-        final BusStop stop = (BusStop) getIntent().getSerializableExtra("stop");
+        final BusStopWithLines stop = (BusStopWithLines) getIntent().getSerializableExtra("stop");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -56,10 +57,10 @@ public class ScheduleActivity extends AppCompatActivity {
         TextView stopDescription = (TextView) findViewById(R.id.stopDescription);
         TextView linesAvailable = (TextView) findViewById(R.id.linesAvailable);
 
-        stopNumber.setText(BusStopUtils.formatBusStop(stop.getCode()));
-        districtName.setText(stop.getAddress());
-        stopDescription.setText(stop.getReference());
-        linesAvailable.setText(stop.getLines());
+        stopNumber.setText(BusStopUtils.formatBusStop(stop.getStop().getCode()));
+        districtName.setText(stop.getStop().getAddress());
+        stopDescription.setText(stop.getStop().getReference());
+        linesAvailable.setText(stop.getFormatedLines());
 
         new FetchScheduleAsyncTask().execute(stop);
     }
@@ -71,7 +72,7 @@ public class ScheduleActivity extends AppCompatActivity {
         mScheduleWebView.destroy();
     }
 
-    private class FetchScheduleAsyncTask extends AsyncTask<BusStop,Void, String>{
+    private class FetchScheduleAsyncTask extends AsyncTask<BusStopWithLines,Void, String>{
 
         @Override
         protected void onPreExecute() {
@@ -80,10 +81,10 @@ public class ScheduleActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(BusStop... params) {
+        protected String doInBackground(BusStopWithLines... params) {
             try {
-                BusStop stop = params[0];
-                Document doc = Jsoup.connect("http://m.rmtcgoiania.com.br/horariodeviagem/visualizar/ponto/" + stop.getCode())
+                BusStopWithLines stop = params[0];
+                Document doc = Jsoup.connect("http://m.rmtcgoiania.com.br/horariodeviagem/visualizar/ponto/" + stop.getStop().getCode())
                         .userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0")
                         .get();
                 Elements elem = doc.select(".table.table-striped.subtab-previsoes");
