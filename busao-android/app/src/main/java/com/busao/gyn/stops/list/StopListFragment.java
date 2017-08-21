@@ -60,6 +60,7 @@ public class StopListFragment extends Fragment {
     public void onStart(){
         super.onStart();
         EventBus.getDefault().register(this);
+
         mAdapter.refresh(mDataSource.readFavorites());
     }
 

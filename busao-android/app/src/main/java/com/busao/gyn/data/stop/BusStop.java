@@ -14,6 +14,7 @@ import java.io.Serializable;
 public class BusStop implements Serializable{
 
     @PrimaryKey
+    @ColumnInfo(name = "id")
     private Integer id;
 
     @ColumnInfo(name = "codigoPonto")

@@ -12,6 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 public class LineStop {
 
     @PrimaryKey
+    @ColumnInfo(name = "id")
     private Integer id;
 
     @ColumnInfo(name = "codigoPonto")

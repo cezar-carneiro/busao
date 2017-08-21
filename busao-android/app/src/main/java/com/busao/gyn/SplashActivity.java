@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.busao.gyn.data.BusaoDatabase;
 import com.busao.gyn.data.DataBaseHelper;
 
 import java.io.IOException;
@@ -15,11 +16,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            new DataBaseHelper(this).createIfNotExists();
-        } catch (IOException e) {
-            Log.e(null, e.getMessage(), e);
-        }
+        BusaoDatabase.getInstance(this);
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

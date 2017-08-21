@@ -13,6 +13,7 @@ import android.arch.persistence.room.PrimaryKey;
 public class BusLine {
 
     @PrimaryKey
+    @ColumnInfo(name = "id")
     private Integer id;
 
     @ColumnInfo(name = "codigo")
