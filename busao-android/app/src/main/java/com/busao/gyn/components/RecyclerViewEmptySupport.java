@@ -55,7 +55,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         mDataObserver.onChanged();
     }
 
-    public void setmEmptyView(View mEmptyView) {
+    public void setEmptyView(View mEmptyView) {
         this.mEmptyView = mEmptyView;
     }
 }

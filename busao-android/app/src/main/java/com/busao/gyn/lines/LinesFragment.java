@@ -31,9 +31,9 @@ public class LinesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bus_lines_list_fragment, null);
 
-        TextView stopListNoFavoritesTextView = (TextView) view.findViewById(R.id.stopListNoFavoritesTextView);
-        RecyclerViewEmptySupport stopsRecyclerView = (RecyclerViewEmptySupport) view.findViewById(R.id.stopListRecyclerView);
-        stopsRecyclerView.setmEmptyView(stopListNoFavoritesTextView);
+        TextView stopListNoFavoritesTextView = (TextView) view.findViewById(R.id.linesListNoFavoritesTextView);
+        RecyclerViewEmptySupport stopsRecyclerView = (RecyclerViewEmptySupport) view.findViewById(R.id.linesListRecyclerView);
+        stopsRecyclerView.setEmptyView(stopListNoFavoritesTextView);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView

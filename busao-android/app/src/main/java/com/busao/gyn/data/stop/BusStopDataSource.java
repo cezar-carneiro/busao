@@ -3,7 +3,10 @@ package com.busao.gyn.data.stop;
 import android.support.annotation.NonNull;
 
 import com.busao.gyn.data.IBusStopDataSource;
+import com.busao.gyn.events.BusStopChanged;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class BusStopDataSource implements IBusStopDataSource {
     @Override
     public void update(BusStop busStop) {
         mBusStopDao.update(busStop);
+        EventBus.getDefault().post(new BusStopChanged(busStop));
     }
 
     @Override
@@ -35,7 +39,7 @@ public class BusStopDataSource implements IBusStopDataSource {
 
     @Override
     public List<BusStopWithLines> searchByLocation(LatLng[] area) {
-        return mBusStopDao.searchByLocation(area[2].latitude, area[0].latitude, area[1].longitude, area[3].longitude);
+        return mBusStopDao.searchByLocation(area[1].longitude, area[2].latitude, area[0].latitude, area[3].longitude);
     }
 
     @Override

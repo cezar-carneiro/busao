@@ -21,8 +21,7 @@ public class BusStopWithLines implements Serializable {
     @Relation(
             parentColumn = "codigoPonto",
             entityColumn = "codigoPonto",
-            entity = LineStop.class,
-            projection = {"codigoLinha"})
+            entity = LineStop.class)
     private List<LineStop> lines;
 
     @Ignore
@@ -76,7 +75,7 @@ public class BusStopWithLines implements Serializable {
             formatSingleLine(sb, minLen, ls.getLine());
             sb.append(", ");
         }
-        sb.delete(sb.length() - 3, sb.length() - 1);
+        sb.delete(sb.length() - 2, sb.length() - 1);
 
         return sb.toString();
     }
@@ -87,6 +86,6 @@ public class BusStopWithLines implements Serializable {
         for(int i = 0; i + str.length() < minLen; i++){
             sb.append("0");
         }
-
+        sb.append(str);
     }
 }

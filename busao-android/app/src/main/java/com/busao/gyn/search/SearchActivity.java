@@ -18,7 +18,6 @@ import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
 import com.busao.gyn.data.BusaoDatabase;
 import com.busao.gyn.data.IBusStopDataSource;
-import com.busao.gyn.data.stop.BusStop;
 import com.busao.gyn.data.stop.BusStopDataSource;
 import com.busao.gyn.data.stop.BusStopWithLines;
 
@@ -49,7 +48,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
         RecyclerViewEmptySupport searchResultsRecyclerView = (RecyclerViewEmptySupport) findViewById(R.id.searchResultsRecyclerView);
         searchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        searchResultsRecyclerView.setmEmptyView(mSearchNoResultsInfoFoundTextView);
+        searchResultsRecyclerView.setEmptyView(mSearchNoResultsInfoFoundTextView);
 
         mSearchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(mDataSource);
         searchResultsRecyclerView.setAdapter(mSearchResultsRecyclerViewAdapter);
