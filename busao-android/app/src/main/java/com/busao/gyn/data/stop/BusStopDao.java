@@ -22,8 +22,8 @@ public interface BusStopDao {
     @Query("SELECT * FROM pontos WHERE pontos.id = :id")
     public BusStopWithLines readBusStop(Integer id);
 
-    @Query("SELECT * FROM pontos WHERE latitude > :bottom AND latitude < :top AND longitude < :right AND longitude > :left")
-    public List<BusStopWithLines> searchByLocation(double top, double right, double bottom, double left);//TODO: in the future we will paginate
+    @Query("SELECT * FROM pontos WHERE latitude < :topLat AND latitude > :bottomLat AND longitude > :leftLong AND longitude < :rightLong")
+    public List<BusStopWithLines> searchByLocation(double topLat, double bottomLat, double leftLong, double rightLong);//TODO: in the future we will paginate
 
     @Query("SELECT * FROM pontos WHERE pontos.codigoPonto LIKE :input OR pontos.endereco LIKE :input OR pontos.pontoReferencia LIKE :input ")
     public List<BusStopWithLines> searchByText(String input);//TODO: in the future we will paginate

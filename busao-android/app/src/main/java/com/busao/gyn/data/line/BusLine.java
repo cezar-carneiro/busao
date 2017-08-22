@@ -3,13 +3,15 @@ package com.busao.gyn.data.line;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
  * Created by cezar.carneiro on 16/08/2017.
  */
 
-@Entity(tableName = "linhas")
+@Entity(tableName = "linhas",
+        indices = {@Index(value = "codigo", unique = true), @Index(value = "nome")})
 public class BusLine {
 
     @PrimaryKey

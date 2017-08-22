@@ -39,7 +39,7 @@ public class BusStopDataSource implements IBusStopDataSource {
 
     @Override
     public List<BusStopWithLines> searchByLocation(LatLng[] area) {
-        return mBusStopDao.searchByLocation(area[1].longitude, area[2].latitude, area[0].latitude, area[3].longitude);
+        return mBusStopDao.searchByLocation(area[0].latitude, area[2].latitude, area[3].longitude, area[1].longitude);
     }
 
     @Override

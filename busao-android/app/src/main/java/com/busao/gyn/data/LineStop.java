@@ -2,16 +2,23 @@ package com.busao.gyn.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
+
+import com.busao.gyn.data.line.BusLine;
+import com.busao.gyn.data.stop.BusStop;
 
 /**
  * Created by cezar.carneiro on 16/08/2017.
  */
 
-@Entity(tableName = "pontoslinhas")
+@Entity(tableName = "pontoslinhas",
+        primaryKeys = {"codigoPonto", "codigoLinha"},
+        foreignKeys = {@ForeignKey(entity = BusStop.class, parentColumns = "codigoPonto", childColumns = "codigoPonto"),
+                @ForeignKey(entity = BusLine.class, parentColumns = "codigo", childColumns = "codigoLinha")},
+        indices = { @Index(value = {"codigoPonto", "codigoLinha"}, unique = true), @Index(value = "codigoPonto"), @Index(value = "codigoLinha")})
 public class LineStop {
 
-    @PrimaryKey
     @ColumnInfo(name = "id")
     private Integer id;
 

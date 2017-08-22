@@ -19,8 +19,7 @@ public class BusLinesWithStops {
     @Relation(
             parentColumn = "codigo",
             entityColumn = "codigoPonto",
-            entity = LineStop.class,
-            projection = {"codigoPonto"})
+            entity = LineStop.class)
     private List<LineStop> stops;
 
     public BusLinesWithStops() {

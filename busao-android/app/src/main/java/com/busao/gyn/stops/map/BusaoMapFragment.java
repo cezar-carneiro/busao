@@ -127,15 +127,15 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                 imageFavorite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BusStop stop = (BusStop) marker.getTag();
-                        stop.setFavorite(!stop.isFavorite());
-                        if(stop.isFavorite() ){
+                        BusStopWithLines stop = (BusStopWithLines) marker.getTag();
+                        stop.getStop().setFavorite(!stop.getStop().isFavorite());
+                        if(stop.getStop().isFavorite() ){
                             imageFavorite.setImageResource(R.drawable.ic_favorite);
                         }else{
                             imageFavorite.setImageResource(R.drawable.ic_favorite_border);
                         }
-                        mDataSource.update(stop);
-                        Snackbar.make(BusaoMapFragment.this.getView(), "Ponto " + stop.getCode() + " atualizado.", Snackbar.LENGTH_LONG)
+                        mDataSource.update(stop.getStop());
+                        Snackbar.make(BusaoMapFragment.this.getView(), "Ponto " + stop.getStop().getCode() + " atualizado.", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
                 });

@@ -3,6 +3,7 @@ package com.busao.gyn.data.stop;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -10,7 +11,8 @@ import java.io.Serializable;
 /**
  * Created by cezar on 23/01/17.
  */
-@Entity(tableName = "pontos")
+@Entity(tableName = "pontos",
+        indices = {@Index(value = "codigoPonto", unique = true), @Index(value = {"latitude", "longitude", "endereco", "bairro", "cidade", "pontoReferencia"})})
 public class BusStop implements Serializable{
 
     @PrimaryKey
