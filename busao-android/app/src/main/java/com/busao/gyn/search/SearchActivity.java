@@ -29,6 +29,13 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     private TextView mSearchNoResultsInfoFoundTextView;
     private SearchResultsRecyclerViewAdapter mSearchResultsRecyclerViewAdapter;
 
+    public static final String TYPE_KEY = "SEARCH_TYPE";
+
+    public enum SearchType{
+        LINE,
+        STOP
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

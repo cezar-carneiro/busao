@@ -19,10 +19,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.busao.gyn.components.TabFragment;
+import com.busao.gyn.events.MapIconClickEvent;
 import com.busao.gyn.lines.LinesFragment;
 import com.busao.gyn.search.SearchActivity;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.Serializable;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private TabFragment.ITabFragmentProvider mTabFragmentProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +75,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
+        mTabFragmentProvider = new BusStopTabProvider();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
-
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.containerView, new TabFragment()).commit();
 
-        //handleIntent(getIntent());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(TabFragment.TABS_PROVIDER_ARG, (Serializable) mTabFragmentProvider);
+        TabFragment tabFragment = (TabFragment) TabFragment.instantiate(this, TabFragment.class.getName(), bundle);
+        tabFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.containerView, tabFragment).commit();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+
+    }
+
+    @Subscribe
+    public void onMapIconClick(MapIconClickEvent event) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        TabFragment tabFragment = (TabFragment) fragmentManager.findFragmentById(R.id.containerView);
+        tabFragment.switchToTab(1);
     }
 
     @Override
@@ -110,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         } else if (id == R.id.search) {
             Intent intent = new Intent(this, SearchActivity.class);
-            intent.putExtra("from", "stop");
+            intent.putExtra(SearchActivity.TYPE_KEY, SearchActivity.SearchType.STOP);
             startActivity(intent);
             return true;
         }
@@ -118,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -127,9 +160,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.nav_stops:
-                fragmentTransaction.replace(R.id.containerView, new TabFragment()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(TabFragment.TABS_PROVIDER_ARG, (Serializable) mTabFragmentProvider);
+                TabFragment tabFragment = (TabFragment) TabFragment.instantiate(this, TabFragment.class.getName(), bundle);
+                tabFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.containerView, tabFragment).commit();
                 setTitle("Pontos");
                 break;
             case R.id.nav_lines:

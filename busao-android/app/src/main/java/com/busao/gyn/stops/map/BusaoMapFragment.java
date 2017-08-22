@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.busao.gyn.R;
 import com.busao.gyn.data.BusaoDatabase;
 import com.busao.gyn.data.IBusStopDataSource;
-import com.busao.gyn.data.stop.BusStop;
 import com.busao.gyn.data.stop.BusStopDataSource;
 import com.busao.gyn.data.stop.BusStopWithLines;
 import com.busao.gyn.events.MapIconClickEvent;
