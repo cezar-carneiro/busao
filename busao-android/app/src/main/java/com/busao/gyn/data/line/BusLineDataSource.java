@@ -26,8 +26,7 @@ public class BusLineDataSource implements IBusLineDataSource {
         return mBusLineDao.readFavorites();
     }
 
-    @Override
-    public List<BusLinesWithStops> searchByText(String input) {
+    public List<BusLine> searchByText(String input) {
         return mBusLineDao.searchByText("%" + input + "%");
     }
 }

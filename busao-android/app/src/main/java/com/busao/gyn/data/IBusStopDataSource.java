@@ -10,9 +10,7 @@ import java.util.List;
  * Created by cezar.carneiro on 18/08/2017.
  */
 
-public interface IBusStopDataSource {
-
-    void update(BusStop busStop);
+public interface IBusStopDataSource extends IDataSource<BusStop> {
 
     List<BusStopWithLines> readFavorites();
 
@@ -20,5 +18,4 @@ public interface IBusStopDataSource {
 
     List<BusStopWithLines> searchByLocation(LatLng[] area);//TODO: in the future we will paginate
 
-    List<BusStopWithLines> searchByText(String input);//TODO: in the future we will paginate
 }

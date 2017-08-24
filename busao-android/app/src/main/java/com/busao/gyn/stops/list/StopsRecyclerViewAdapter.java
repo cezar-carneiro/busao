@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.data.IBusStopDataSource;
 import com.busao.gyn.data.stop.BusStopWithLines;
@@ -25,10 +26,7 @@ import java.util.List;
  * Created by cezar on 03/01/17.
  */
 
-public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecyclerViewAdapter.ViewHolder> {
-
-    private List<BusStopWithLines> mDataset;
-    private IBusStopDataSource mDataSource;
+public class StopsRecyclerViewAdapter extends DefaultRecyclerViewAdapter<BusStopWithLines, IBusStopDataSource, StopsRecyclerViewAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -54,45 +52,8 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
         }
     }
 
-    public StopsRecyclerViewAdapter(IBusStopDataSource dataSource) {
-        this(dataSource, null);
-    }
-
     public StopsRecyclerViewAdapter(IBusStopDataSource dataSource, List<BusStopWithLines> dataset) {
-        this.mDataSource = dataSource;
-        this.mDataset = dataset;
-    }
-
-    public void refresh(List<BusStopWithLines> data){
-        if(data == null) {
-            return;
-        }
-        if(mDataset == null) {
-            mDataset = data;
-            notifyDataSetChanged();
-            return;
-        }
-        mDataset.clear();
-        mDataset.addAll(data);
-        notifyDataSetChanged();
-    }
-
-    public void refreshItem(BusStopWithLines item){
-        //TODO: we should something better than this
-        for(int i = 0; i < mDataset.size(); i++){
-            if(mDataset.get(i).equals(item.getStop().getId())){
-                mDataset.set(i, item);
-                notifyItemChanged(i);
-            }
-        }
-    }
-
-    public void clear(){
-        if(mDataset == null){
-            return;
-        }
-        mDataset.clear();
-        notifyDataSetChanged();
+        super(dataSource, dataset);
     }
 
     @Override
@@ -156,11 +117,6 @@ public class StopsRecyclerViewAdapter extends RecyclerView.Adapter<StopsRecycler
                 v.getContext().startActivity(intent);
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataset == null ? 0 : mDataset.size();
     }
 
     private void fireMapIconClickEvent(BusStopWithLines stop){

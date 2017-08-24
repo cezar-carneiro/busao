@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
 import com.busao.gyn.data.BusaoDatabase;
@@ -25,7 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
  */
 public class StopListFragment extends Fragment {
 
-    private StopsRecyclerViewAdapter mAdapter;
+    private DefaultRecyclerViewAdapter mAdapter;
 
     private IBusStopDataSource mDataSource;
 
@@ -45,15 +46,10 @@ public class StopListFragment extends Fragment {
         stopsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         stopsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mDataSource = new BusStopDataSource(BusaoDatabase.getInstance(getContext()).busStopDao());
-        mAdapter = new StopsRecyclerViewAdapter(mDataSource);
+        mDataSource = new BusStopDataSource(BusaoDatabase.get(getContext()).busStopDao());
+        mAdapter = new StopsRecyclerViewAdapter(mDataSource,null);
         stopsRecyclerView.setAdapter(mAdapter);
         return view;
-    }
-
-    @Override
-    public void onDestroyView(){
-        super.onDestroyView();
     }
 
     @Override

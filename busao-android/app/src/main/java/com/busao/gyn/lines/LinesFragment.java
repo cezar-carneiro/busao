@@ -10,11 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
 import com.busao.gyn.data.BusaoDatabase;
 import com.busao.gyn.data.IBusLineDataSource;
 import com.busao.gyn.data.line.BusLineDataSource;
+import com.busao.gyn.events.BusLineChanged;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by cezar on 20/03/2017.
@@ -22,7 +27,7 @@ import com.busao.gyn.data.line.BusLineDataSource;
 
 public class LinesFragment extends Fragment {
 
-    private LinesRecyclerViewAdapter mAdapter;
+    private DefaultRecyclerViewAdapter mAdapter;
 
     private IBusLineDataSource mDataSource;
 
@@ -42,10 +47,28 @@ public class LinesFragment extends Fragment {
         stopsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         stopsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mDataSource = new BusLineDataSource(BusaoDatabase.getInstance(getContext()).busLineDao());
-        mAdapter = new LinesRecyclerViewAdapter(mDataSource);
+        mDataSource = new BusLineDataSource(BusaoDatabase.get(getContext()).busLineDao());
+        mAdapter = new LinesRecyclerViewAdapter(mDataSource,null);
         stopsRecyclerView.setAdapter(mAdapter);
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+
+        mAdapter.refresh(mDataSource.readFavorites());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onBusLineChanged(BusLineChanged event){
+        mAdapter.refresh(mDataSource.readFavorites());
+    }
 }

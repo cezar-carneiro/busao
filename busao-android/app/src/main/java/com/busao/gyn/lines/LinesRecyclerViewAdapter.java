@@ -7,10 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.data.IBusLineDataSource;
 import com.busao.gyn.data.line.BusLine;
+import com.busao.gyn.data.line.BusLinesWithStops;
+import com.busao.gyn.events.MapIconClickEvent;
 import com.busao.gyn.util.BusStopUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -18,10 +23,8 @@ import java.util.List;
  * Created by cezar on 17/08/17.
  */
 
-public class LinesRecyclerViewAdapter extends RecyclerView.Adapter<LinesRecyclerViewAdapter.ViewHolder> {
+public class LinesRecyclerViewAdapter extends DefaultRecyclerViewAdapter<BusLinesWithStops, IBusLineDataSource, LinesRecyclerViewAdapter.ViewHolder> {
 
-    private List<BusLine> mDataset;
-    private IBusLineDataSource mDataSource;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -41,45 +44,8 @@ public class LinesRecyclerViewAdapter extends RecyclerView.Adapter<LinesRecycler
         }
     }
 
-    public LinesRecyclerViewAdapter(IBusLineDataSource dataSource) {
-        this(dataSource, null);
-    }
-
-    public LinesRecyclerViewAdapter(IBusLineDataSource dataSource, List<BusLine> dataset) {
-        this.mDataSource = dataSource;
-        this.mDataset = dataset;
-    }
-
-    public void refresh(List<BusLine> data){
-        if(data == null) {
-            return;
-        }
-        if(mDataset == null) {
-            mDataset = data;
-            notifyDataSetChanged();
-            return;
-        }
-        mDataset.clear();
-        mDataset.addAll(data);
-        notifyDataSetChanged();
-    }
-
-    public void refreshItem(BusLine item){
-        //TODO: we should do something better than this
-        for(int i = 0; i < mDataset.size(); i++){
-            if(mDataset.get(i).equals(item.getId())){
-                mDataset.set(i, item);
-                notifyItemChanged(i);
-            }
-        }
-    }
-
-    public void clear(){
-        if(mDataset == null){
-            return;
-        }
-        mDataset.clear();
-        notifyDataSetChanged();
+    public LinesRecyclerViewAdapter(IBusLineDataSource dataSource, List<BusLinesWithStops> dataset) {
+        super(dataSource, dataset);
     }
 
     @Override
@@ -94,38 +60,39 @@ public class LinesRecyclerViewAdapter extends RecyclerView.Adapter<LinesRecycler
         if (mDataset == null || mDataset.size() == 0) {
             return;
         }
-        final BusLine line = mDataset.get(position);
-        String code = BusStopUtils.formatBusStop(line.getCode());
+        final BusLinesWithStops line = mDataset.get(position);
+        String code = BusStopUtils.formatBusStop(line.getLine().getCode());
 
         holder.lineCodeTextView.setText(code);
 
-        holder.lineDescriptionTextView.setText(line.getDescription());
+        holder.lineDescriptionTextView.setText(line.getLine().getDescription());
+
+        if(line.getLine().isFavorite()){
+            holder.favoriteLineImageView.setImageResource(R.drawable.ic_favorite);
+        }else{
+            holder.favoriteLineImageView.setImageResource(R.drawable.ic_favorite_border);
+        }
 
         holder.favoriteLineImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                line.setFavorite(!line.isFavorite());
-                if (line.isFavorite()) {
+                line.getLine().setFavorite(!line.getLine().isFavorite());
+                if (line.getLine().isFavorite()) {
                     holder.favoriteLineImageView.setImageResource(R.drawable.ic_favorite);
                 } else {
                     holder.favoriteLineImageView.setImageResource(R.drawable.ic_favorite_border);
                 }
-                mDataSource.update(line);
+                mDataSource.update(line.getLine());
             }
         });
 
         holder.showLineOnMapImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fireMapIconClickEvent(line);
+                fireMapIconClickEvent(line.getLine());
             }
         });
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataset == null ? 0 : mDataset.size();
     }
 
     private void fireMapIconClickEvent(BusLine line){

@@ -26,6 +26,6 @@ public interface BusStopDao {
     public List<BusStopWithLines> searchByLocation(double topLat, double bottomLat, double leftLong, double rightLong);//TODO: in the future we will paginate
 
     @Query("SELECT * FROM pontos WHERE pontos.codigoPonto LIKE :input OR pontos.endereco LIKE :input OR pontos.pontoReferencia LIKE :input ")
-    public List<BusStopWithLines> searchByText(String input);//TODO: in the future we will paginate
+    public List<BusStop> searchByText(String input);//TODO: in the future we will paginate
 
 }

@@ -3,6 +3,7 @@ package com.busao.gyn.data.stop;
 import android.support.annotation.NonNull;
 
 import com.busao.gyn.data.IBusStopDataSource;
+import com.busao.gyn.data.line.BusLine;
 import com.busao.gyn.events.BusStopChanged;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -43,7 +44,7 @@ public class BusStopDataSource implements IBusStopDataSource {
     }
 
     @Override
-    public List<BusStopWithLines> searchByText(String input) {
+    public List<BusStop> searchByText(String input) {
         return mBusStopDao.searchByText("%" + input + "%");
     }
 }

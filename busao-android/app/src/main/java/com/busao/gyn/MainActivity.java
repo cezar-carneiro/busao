@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private TabFragment.ITabFragmentProvider mTabFragmentProvider;
 
+    private SearchActivity.SearchType mSearchType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
+        mSearchType = SearchActivity.SearchType.STOP;
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -92,14 +95,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-
     }
 
     @Subscribe
@@ -144,7 +145,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         } else if (id == R.id.search) {
             Intent intent = new Intent(this, SearchActivity.class);
-            intent.putExtra(SearchActivity.TYPE_KEY, SearchActivity.SearchType.STOP);
+
+            intent.putExtra(SearchActivity.TYPE_KEY, mSearchType);
             startActivity(intent);
             return true;
         }
@@ -168,10 +170,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 tabFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.containerView, tabFragment).commit();
                 setTitle("Pontos");
+
+                mSearchType = SearchActivity.SearchType.STOP;
                 break;
             case R.id.nav_lines:
                 fragmentTransaction.replace(R.id.containerView, new LinesFragment()).commit();
                 setTitle("Linhas");
+
+                mSearchType = SearchActivity.SearchType.LINE;
                 break;
             case R.id.nav_remove_ads:
                 break;

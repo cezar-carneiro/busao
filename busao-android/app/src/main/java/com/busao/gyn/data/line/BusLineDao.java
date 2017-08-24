@@ -20,6 +20,6 @@ public interface BusLineDao {
     public List<BusLinesWithStops> readFavorites();//TODO: in the future we will paginate
 
     @Query("SELECT * FROM linhas WHERE linhas.codigo LIKE :input OR linhas.nome LIKE :input")
-    public List<BusLinesWithStops> searchByText(String input);//TODO: in the future we will paginate
+    public List<BusLine> searchByText(String input);//TODO: in the future we will paginate
 
 }

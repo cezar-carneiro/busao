@@ -9,11 +9,8 @@ import java.util.List;
  * Created by cezar.carneiro on 18/08/2017.
  */
 
-public interface IBusLineDataSource {
-
-    void update(BusLine busLine);
+public interface IBusLineDataSource extends IDataSource<BusLine> {
 
     List<BusLinesWithStops> readFavorites();//TODO: in the future we will paginate
 
-    List<BusLinesWithStops> searchByText(String input);//TODO: in the future we will paginate
 }

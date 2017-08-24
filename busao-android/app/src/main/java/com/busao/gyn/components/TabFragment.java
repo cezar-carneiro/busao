@@ -46,6 +46,10 @@ public class TabFragment extends Fragment {
         mViewPager.setCurrentItem(index);
     }
 
+    public int getShowTabIndex(){
+        return mViewPager.getCurrentItem();
+    }
+
     public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         private ITabFragmentProvider mProvider;

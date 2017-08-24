@@ -35,7 +35,7 @@ public abstract class BusaoDatabase extends RoomDatabase {
 
     public abstract BusLineDao busLineDao();
 
-    public static BusaoDatabase getInstance(final Context context) {
+    public static BusaoDatabase get(final Context context) {
         synchronized (sLock) {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(), BusaoDatabase.class, "database.db").addCallback(new Callback() {

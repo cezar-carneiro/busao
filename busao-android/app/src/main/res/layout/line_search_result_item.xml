@@ -17,7 +17,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/lineCodeTextView"
+            android:id="@+id/lineNumberSearchResultTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
@@ -35,7 +35,7 @@
             android:textSize="18dp" />
 
         <TextView
-            android:id="@+id/lineDescriptionTextView"
+            android:id="@+id/lineDescriptionSearchResultTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -55,18 +55,11 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/favoriteLineImageView"
+            android:id="@+id/favoriteLineSearchResultImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="4dp"
             app:srcCompat="@drawable/ic_favorite_border" />
-
-        <ImageView
-            android:id="@+id/showLineOnMapImageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="4dp"
-            app:srcCompat="@drawable/ic_google_maps" />
 
     </LinearLayout>
 

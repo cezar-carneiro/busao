@@ -9,26 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.data.IBusStopDataSource;
-import com.busao.gyn.data.stop.BusStopWithLines;
+import com.busao.gyn.data.stop.BusStop;
 import com.busao.gyn.schedule.ScheduleActivity;
 import com.busao.gyn.util.BusStopUtils;
 import com.busao.gyn.util.TextViewUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
-
 /**
  * Created by cezar.carneiro on 12/05/17.
  */
 
-public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<SearchResultsRecyclerViewAdapter.ViewHolder> {
-
-    private List<BusStopWithLines> mDataset;
-    private IBusStopDataSource mDataSource;
-    private String mQuery;
+public class StopsSearchResultsRecyclerViewAdapter extends DefaultRecyclerViewAdapter<BusStop, IBusStopDataSource, StopsSearchResultsRecyclerViewAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -50,43 +45,12 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         }
     }
 
-    public SearchResultsRecyclerViewAdapter(IBusStopDataSource dataSource) {
-        this(dataSource, null);
-    }
-
-    public SearchResultsRecyclerViewAdapter(IBusStopDataSource dataSource, List<BusStopWithLines> dataset) {
-        this.mDataSource = dataSource;
-        this.mDataset = dataset;
-    }
-
-    public void setQuery(String query){
-        this.mQuery = query;
-    }
-
-    public void refresh(List<BusStopWithLines> data){
-        if(data == null) {
-            return;
-        }
-        if(mDataset == null) {
-            mDataset = data;
-            notifyDataSetChanged();
-            return;
-        }
-        mDataset.clear();
-        mDataset.addAll(data);
-        notifyDataSetChanged();
-    }
-
-    public void clear(){
-        if(mDataset == null){
-            return;
-        }
-        mDataset.clear();
-        notifyDataSetChanged();
+    public StopsSearchResultsRecyclerViewAdapter(IBusStopDataSource dataSource) {
+        super(dataSource, null);
     }
 
     @Override
-    public SearchResultsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public StopsSearchResultsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stop_search_result_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -97,23 +61,23 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         if (mDataset == null || mDataset.size() == 0) {
             return;
         }
-        final BusStopWithLines stop = mDataset.get(position);
-        String code = BusStopUtils.formatBusStop(mDataset.get(position).getStop().getCode());
+        final BusStop stop = mDataset.get(position);
+        String code = BusStopUtils.formatBusStop(mDataset.get(position).getCode());
 
         TextViewUtils.highlight(code, mQuery, holder.stopNumberSearchResult);
-        TextViewUtils.highlight(stop.getStop().getAddress(), mQuery, holder.streetNameSearchResult);
-        holder.districtNameSearchResult.setText(stop.getStop().getNeighborhood());
+        TextViewUtils.highlight(stop.getAddress(), mQuery, holder.streetNameSearchResult);
+        holder.districtNameSearchResult.setText(stop.getNeighborhood());
 
-        if(StringUtils.isEmpty(stop.getStop().getReference())){
+        if(StringUtils.isEmpty(stop.getReference())){
             holder.stopDescriptionSearchResult.setVisibility(View.GONE);
         }else{
             holder.stopDescriptionSearchResult.setTypeface(null, Typeface.NORMAL);
-            TextViewUtils.highlight(stop.getStop().getReference(), mQuery, holder.stopDescriptionSearchResult);
+            TextViewUtils.highlight(stop.getReference(), mQuery, holder.stopDescriptionSearchResult);
         }
 
-        holder.cityNameSearchResult.setText(stop.getStop().getCity());
+        holder.cityNameSearchResult.setText(stop.getCity());
 
-        if(stop.getStop().isFavorite()){
+        if(stop.isFavorite()){
             holder.imageFavoriteSearchResult.setImageResource(R.drawable.ic_favorite);
         }else{
             holder.imageFavoriteSearchResult.setImageResource(R.drawable.ic_favorite_border);
@@ -122,13 +86,13 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         holder.imageFavoriteSearchResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stop.getStop().setFavorite(!stop.getStop().isFavorite());
-                if(stop.getStop().isFavorite()){
+                stop.setFavorite(!stop.isFavorite());
+                if(stop.isFavorite()){
                     holder.imageFavoriteSearchResult.setImageResource(R.drawable.ic_favorite);
                 }else{
                     holder.imageFavoriteSearchResult.setImageResource(R.drawable.ic_favorite_border);
                 }
-                mDataSource.update(stop.getStop());
+                mDataSource.update(stop);
             }
         });
 
@@ -141,11 +105,6 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             }
         });
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataset == null ? 0 : mDataset.size();
     }
 
 }

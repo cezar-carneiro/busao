@@ -11,23 +11,25 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
+import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.components.RecyclerViewEmptySupport;
 import com.busao.gyn.data.BusaoDatabase;
+import com.busao.gyn.data.IBusLineDataSource;
 import com.busao.gyn.data.IBusStopDataSource;
+import com.busao.gyn.data.IDataSource;
+import com.busao.gyn.data.line.BusLineDataSource;
 import com.busao.gyn.data.stop.BusStopDataSource;
-import com.busao.gyn.data.stop.BusStopWithLines;
 
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
 
-    private IBusStopDataSource mDataSource;
+    private IDataSource mDataSource;
     private TextView mSearchNoResultsInfoFoundTextView;
-    private SearchResultsRecyclerViewAdapter mSearchResultsRecyclerViewAdapter;
+    private DefaultRecyclerViewAdapter mResultsAdapter;
 
     public static final String TYPE_KEY = "SEARCH_TYPE";
 
@@ -43,29 +45,27 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SearchActivity.this.finish();
-            }
-        });
 
-        mDataSource = new BusStopDataSource(BusaoDatabase.getInstance(this).busStopDao());
         mSearchNoResultsInfoFoundTextView = (TextView) findViewById(R.id.searchNoResultsInfoFoundTextView);
-
         RecyclerViewEmptySupport searchResultsRecyclerView = (RecyclerViewEmptySupport) findViewById(R.id.searchResultsRecyclerView);
         searchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         searchResultsRecyclerView.setEmptyView(mSearchNoResultsInfoFoundTextView);
 
-        mSearchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(mDataSource);
-        searchResultsRecyclerView.setAdapter(mSearchResultsRecyclerViewAdapter);
+        SearchType type = (SearchType) getIntent().getSerializableExtra(TYPE_KEY);
+        switch (type){
+            case LINE:
+                mDataSource = new BusLineDataSource(BusaoDatabase.get(SearchActivity.this).busLineDao());
+                mResultsAdapter = new LinesSearchResultsRecyclerViewAdapter((IBusLineDataSource) mDataSource);
+                break;
+            case STOP:
+                mDataSource = new BusStopDataSource(BusaoDatabase.get(this).busStopDao());
+                mResultsAdapter = new StopsSearchResultsRecyclerViewAdapter((IBusStopDataSource) mDataSource);
+                break;
+        }
+
+        searchResultsRecyclerView.setAdapter(mResultsAdapter);
 
         handleIntent(getIntent());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -110,14 +110,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     private void doSearch(String query) {
-        List<BusStopWithLines> mStops = mDataSource.searchByText(query);
+        List mStops = mDataSource.searchByText(query);
         if(mStops == null || mStops.size() == 0) {
             mSearchNoResultsInfoFoundTextView.setText("Nenhum resultado encontrado!");
-            mSearchResultsRecyclerViewAdapter.clear();
+            mResultsAdapter.clear();
             return;
         }
-        mSearchResultsRecyclerViewAdapter.setQuery(query);
-        mSearchResultsRecyclerViewAdapter.refresh(mStops);
+        mResultsAdapter.setQuery(query);
+        mResultsAdapter.refresh(mStops);
     }
 
     @Override
