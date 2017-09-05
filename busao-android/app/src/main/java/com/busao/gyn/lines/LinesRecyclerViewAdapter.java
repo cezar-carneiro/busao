@@ -10,9 +10,11 @@ import android.widget.TextView;
 import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.data.IBusLineDataSource;
-import com.busao.gyn.data.line.BusLine;
 import com.busao.gyn.data.line.BusLinesWithStops;
+import com.busao.gyn.events.LineMapIconClickEvent;
 import com.busao.gyn.util.FormatsUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -86,14 +88,14 @@ public class LinesRecyclerViewAdapter extends DefaultRecyclerViewAdapter<BusLine
         holder.showLineOnMapImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fireMapIconClickEvent(line.getLine());
+                fireMapIconClickEvent(line);
             }
         });
 
     }
 
-    private void fireMapIconClickEvent(BusLine line){
-//        EventBus.getDefault().post(new MapIconClickEvent(line));
+    private void fireMapIconClickEvent(BusLinesWithStops line){
+        EventBus.getDefault().post(new LineMapIconClickEvent(line));
     }
 }
 

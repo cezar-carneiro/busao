@@ -2,6 +2,8 @@ package com.busao.gyn;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
+
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -18,5 +20,9 @@ public class BusaoApplication extends Application {
                 .sendNoSubscriberEvent(false)
                 .throwSubscriberException(BuildConfig.DEBUG)
                 .installDefaultEventBus();
+
+        if(BuildConfig.DEBUG){
+            Stetho.initializeWithDefaults(this);
+        }
     }
 }

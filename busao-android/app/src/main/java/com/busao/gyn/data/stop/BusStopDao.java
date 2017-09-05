@@ -4,6 +4,8 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.busao.gyn.data.line.BusLinesWithStops;
+
 import java.util.List;
 
 /**
@@ -14,18 +16,21 @@ import java.util.List;
 public interface BusStopDao {
 
     @Update
-    public void update(BusStop busStop);
+    void update(BusStop busStop);
 
     @Query("SELECT * FROM pontos WHERE pontos.favorito = 1")
-    public List<BusStopWithLines> readFavorites();
+    List<BusStopWithLines> readFavorites();
 
     @Query("SELECT * FROM pontos WHERE pontos.id = :id")
-    public BusStopWithLines readBusStop(Integer id);
+    BusStopWithLines readBusStop(Integer id);
 
     @Query("SELECT * FROM pontos WHERE latitude < :topLat AND latitude > :bottomLat AND longitude > :leftLong AND longitude < :rightLong")
-    public List<BusStopWithLines> searchByLocation(double topLat, double bottomLat, double leftLong, double rightLong);//TODO: in the future we will paginate
+    List<BusStopWithLines> searchByLocation(double topLat, double bottomLat, double leftLong, double rightLong);//TODO: in the future we will paginate
 
     @Query("SELECT * FROM pontos WHERE pontos.codigoPonto LIKE :input OR pontos.endereco LIKE :input OR pontos.pontoReferencia LIKE :input ")
-    public List<BusStop> searchByText(String input);//TODO: in the future we will paginate
+    List<BusStop> searchByText(String input);//TODO: in the future we will paginate
+
+    @Query("SELECT * FROM pontos INNER JOIN pontoslinhas ON pontoslinhas.codigoPonto = pontos.codigoPonto WHERE pontoslinhas.codigoLinha = :line" )
+    List<BusStopWithLines> listByLine(Integer line);
 
 }

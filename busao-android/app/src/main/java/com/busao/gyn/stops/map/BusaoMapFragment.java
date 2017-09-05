@@ -18,7 +18,8 @@ import com.busao.gyn.data.BusaoDatabase;
 import com.busao.gyn.data.IBusStopDataSource;
 import com.busao.gyn.data.stop.BusStopDataSource;
 import com.busao.gyn.data.stop.BusStopWithLines;
-import com.busao.gyn.events.MapIconClickEvent;
+import com.busao.gyn.events.LineMapIconClickEvent;
+import com.busao.gyn.events.StopMapIconClickEvent;
 import com.busao.gyn.util.FormatsUtils;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -162,7 +163,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                 LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
 
                 if(mFirstZoom) {
-                    changeCamera(ll);
+                    changeCamera(ll, 17);
                     searchLocation(ll);
                     mFirstZoom = false;
                 }
@@ -203,7 +204,10 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         clearMarkers();
 
         for(BusStopWithLines stop : stops){
-            createMarker(stop);
+            createMarker(String.valueOf(stop.getStop().getCode()),
+                    stop.getStop().getAddress(),
+                    stop,
+                    new LatLng(stop.getStop().getLatitude(), stop.getStop().getLongitude()));
         }
     }
 
@@ -215,22 +219,22 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         mMarkers.clear();
     }
 
-    private void createMarker(BusStopWithLines stop) {
-        MarkerOptions mo = new MarkerOptions().position(new LatLng(stop.getStop().getLatitude(), stop.getStop().getLongitude()))
-                .title(String.valueOf(stop.getStop().getCode())).snippet(stop.getStop().getAddress());
+    private void createMarker(String title, String snippet, Object tag, LatLng location) {
+        MarkerOptions mo = new MarkerOptions().position(location)
+                .title(title).snippet(snippet);
         Marker marker = mGoogleMap.addMarker(mo);
-        marker.setTag(stop);
+        marker.setTag(tag);
         mMarkers.add(marker);
     }
 
-    private void changeCamera(LatLng loc){
+    private void changeCamera(LatLng loc, float zoom){
         if(loc == null || mGoogleMap == null) {
             return;
         }
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17), 2000, null);
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, zoom), 2000, null);
     }
 
-    public void showSingleStop(final BusStopWithLines stop) {
+    public void showLineStops(BusStopWithLines... stops){
         if(mGoogleMap == null){
             return;
         }
@@ -240,13 +244,27 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
             mLocationCircle = null;
         }
         clearMarkers();
-        createMarker(stop);
-        changeCamera(new LatLng(stop.getStop().getLatitude(), stop.getStop().getLongitude()));
+        if(stops != null && stops.length >= 1){
+            changeCamera(new LatLng(stops[0].getStop().getLatitude(), stops[0].getStop().getLongitude()), 20);
+            for(BusStopWithLines stop: stops){
+                LatLng location = new LatLng(stop.getStop().getLatitude(), stop.getStop().getLongitude());
+                createMarker(String.valueOf(stop.getStop().getCode()),
+                        stop.getStop().getAddress(),
+                        stop,
+                        location);
+            }
+        }
     }
 
     @Subscribe
-    public void onMapIconClick(MapIconClickEvent event) {
-        showSingleStop(event.getStop());
+    public void onStopMapIconClick(StopMapIconClickEvent event) {
+        showLineStops(event.getStop());
+    }
+
+    @Subscribe
+    public void onLineMapIconClick(LineMapIconClickEvent event) {
+        List<BusStopWithLines> stops = mDataSource.listByLine(event.getLine().getLine().getCode());
+        showLineStops((BusStopWithLines[]) stops.toArray());
     }
 
 }

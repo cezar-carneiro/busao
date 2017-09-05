@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
@@ -20,8 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.busao.gyn.components.TabFragment;
-import com.busao.gyn.events.MapIconClickEvent;
-import com.busao.gyn.lines.LinesFragment;
+import com.busao.gyn.events.LineMapIconClickEvent;
+import com.busao.gyn.events.StopMapIconClickEvent;
 import com.busao.gyn.search.SearchActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -104,10 +105,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Subscribe
-    public void onMapIconClick(MapIconClickEvent event) {
+    public void onMapIconClick(@Nullable StopMapIconClickEvent event) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         TabFragment tabFragment = (TabFragment) fragmentManager.findFragmentById(R.id.containerView);
-        tabFragment.switchToTab(1);
+        tabFragment.switchToTab(2);
+    }
+
+    @Subscribe
+    public void onLineMapIconClick(LineMapIconClickEvent event) {
+        onMapIconClick(null);
     }
 
     @Override
@@ -141,9 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.search) {
+        if (id == R.id.search) {
             Intent intent = new Intent(this, SearchActivity.class);
 
             intent.putExtra(SearchActivity.TYPE_KEY, mSearchType);
@@ -168,24 +172,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 bundle.putSerializable(TabFragment.TABS_PROVIDER_ARG, (Serializable) mTabFragmentProvider);
                 TabFragment tabFragment = (TabFragment) TabFragment.instantiate(this, TabFragment.class.getName(), bundle);
                 tabFragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.containerView, tabFragment).commit();
+                fragmentTransaction.replace(R.id.containerView, tabFragment).commitNow();
                 setTitle("Pontos");
 
                 mSearchType = SearchActivity.SearchType.STOP;
-                break;
-            case R.id.nav_lines:
-                fragmentTransaction.replace(R.id.containerView, new LinesFragment()).commit();
-                setTitle("Linhas");
-
-                mSearchType = SearchActivity.SearchType.LINE;
                 break;
             case R.id.nav_remove_ads:
                 break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_share:
-                break;
-            case R.id.nav_send:
                 break;
             case R.id.nav_rate:
                 break;

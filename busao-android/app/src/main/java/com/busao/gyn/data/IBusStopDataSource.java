@@ -18,4 +18,5 @@ public interface IBusStopDataSource extends IDataSource<BusStop> {
 
     List<BusStopWithLines> searchByLocation(LatLng[] area);//TODO: in the future we will paginate
 
+    List<BusStopWithLines> listByLine(Integer line);
 }

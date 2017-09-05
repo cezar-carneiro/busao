@@ -14,12 +14,12 @@ import java.util.List;
 public interface BusLineDao {
 
     @Update
-    public void update(BusLine busLine);
+    void update(BusLine busLine);
 
     @Query("SELECT * FROM linhas WHERE linhas.favorita = 1")
-    public List<BusLinesWithStops> readFavorites();//TODO: in the future we will paginate
+    List<BusLinesWithStops> readFavorites();//TODO: in the future we will paginate
 
     @Query("SELECT * FROM linhas WHERE linhas.codigo LIKE :input OR linhas.nome LIKE :input")
-    public List<BusLine> searchByText(String input);//TODO: in the future we will paginate
+    List<BusLine> searchByText(String input);//TODO: in the future we will paginate
 
 }

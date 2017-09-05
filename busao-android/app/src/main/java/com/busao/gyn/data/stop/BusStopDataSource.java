@@ -44,6 +44,11 @@ public class BusStopDataSource implements IBusStopDataSource {
     }
 
     @Override
+    public List<BusStopWithLines> listByLine(Integer line) {
+        return mBusStopDao.listByLine(line);
+    }
+
+    @Override
     public List<BusStop> searchByText(String input) {
         return mBusStopDao.searchByText("%" + input + "%");
     }

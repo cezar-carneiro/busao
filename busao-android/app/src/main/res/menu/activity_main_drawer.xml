@@ -4,13 +4,9 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_stops"
-            android:icon="@drawable/ic_pin"
+            android:icon="@drawable/ic_bus"
             android:checked="true"
             android:title="Pontos" />
-        <item
-            android:id="@+id/nav_lines"
-            android:icon="@drawable/ic_bus"
-            android:title="Linhas" />
         <item
             android:id="@+id/nav_remove_ads"
             android:icon="@drawable/ic_add_shopping_cart"
@@ -21,22 +17,17 @@
             android:title="Settings" />
     </group>
 
-    <group android:title="Communicate">
-        <menu>
+    <item android:title="Communicate">
+        <menu >
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:checkable="false"
                 android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:checkable="false"
-                android:title="Send" />
         </menu>
-    </group>
+    </item>
 
-    <group android:title="About" >
+    <item android:title="About" >
         <menu >
             <item
                 android:id="@+id/nav_rate"
@@ -46,7 +37,7 @@
             <item
                 android:id="@+id/nav_developer"
                 android:icon="@drawable/ic_face"
-                android:checkable="true"
+                android:checkable="false"
                 android:title="Developer" />
             <item
                 android:id="@+id/nav_info"
@@ -54,6 +45,6 @@
                 android:checkable="false"
                 android:title="Info" />
         </menu>
-    </group>
+    </item>
 
 </menu>

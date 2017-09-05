@@ -1,17 +1,16 @@
 package com.busao.gyn.events;
 
-import com.busao.gyn.data.stop.BusStop;
 import com.busao.gyn.data.stop.BusStopWithLines;
 
 /**
  * Created by cezar.carneiro on 11/05/2017.
  */
 
-public class MapIconClickEvent {
+public class StopMapIconClickEvent {
 
     private BusStopWithLines stop;
 
-    public MapIconClickEvent(BusStopWithLines stop) {
+    public StopMapIconClickEvent(BusStopWithLines stop) {
         this.stop = stop;
     }
 

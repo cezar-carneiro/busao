@@ -13,7 +13,7 @@ import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.data.IBusStopDataSource;
 import com.busao.gyn.data.stop.BusStopWithLines;
-import com.busao.gyn.events.MapIconClickEvent;
+import com.busao.gyn.events.StopMapIconClickEvent;
 import com.busao.gyn.schedule.ScheduleActivity;
 import com.busao.gyn.util.FormatsUtils;
 
@@ -120,7 +120,7 @@ public class StopsRecyclerViewAdapter extends DefaultRecyclerViewAdapter<BusStop
     }
 
     private void fireMapIconClickEvent(BusStopWithLines stop){
-        EventBus.getDefault().post(new MapIconClickEvent(stop));
+        EventBus.getDefault().post(new StopMapIconClickEvent(stop));
     }
 }
 
