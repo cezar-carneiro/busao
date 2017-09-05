@@ -110,14 +110,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     private void doSearch(String query) {
-        List mStops = mDataSource.searchByText(query);
-        if(mStops == null || mStops.size() == 0) {
+        List results = mDataSource.searchByText(query);
+        if(results == null || results.size() == 0) {
             mSearchNoResultsInfoFoundTextView.setText("Nenhum resultado encontrado!");
             mResultsAdapter.clear();
             return;
         }
         mResultsAdapter.setQuery(query);
-        mResultsAdapter.refresh(mStops);
+        mResultsAdapter.refresh(results);
     }
 
     @Override
