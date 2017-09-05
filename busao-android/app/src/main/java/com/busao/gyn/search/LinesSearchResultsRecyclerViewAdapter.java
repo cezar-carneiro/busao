@@ -11,7 +11,7 @@ import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.data.IBusLineDataSource;
 import com.busao.gyn.data.line.BusLine;
-import com.busao.gyn.util.BusStopUtils;
+import com.busao.gyn.util.FormatsUtils;
 import com.busao.gyn.util.TextViewUtils;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public class LinesSearchResultsRecyclerViewAdapter extends DefaultRecyclerViewAd
             return;
         }
         final BusLine line = mDataset.get(position);
-        String code = BusStopUtils.formatBusStop(mDataset.get(position).getCode());
+        String code = FormatsUtils.formatBusLine(mDataset.get(position).getCode());
 
         TextViewUtils.highlight(code, mQuery, holder.lineNumberSearchResultTextView);
         TextViewUtils.highlight(line.getDescription(), mQuery, holder.lineDescriptionSearchResultTextView);

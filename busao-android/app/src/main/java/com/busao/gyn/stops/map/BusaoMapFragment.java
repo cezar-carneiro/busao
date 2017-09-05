@@ -19,7 +19,7 @@ import com.busao.gyn.data.IBusStopDataSource;
 import com.busao.gyn.data.stop.BusStopDataSource;
 import com.busao.gyn.data.stop.BusStopWithLines;
 import com.busao.gyn.events.MapIconClickEvent;
-import com.busao.gyn.util.BusStopUtils;
+import com.busao.gyn.util.FormatsUtils;
 import com.busao.gyn.util.GeometryUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -140,7 +140,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
                 });
 
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext(), R.style.StopDetailsMapDialogStyle);
-                dialogBuilder.setTitle(BusStopUtils.formatBusStop(stop.getStop().getCode(), stop.getStop().getAddress()));
+                dialogBuilder.setTitle(FormatsUtils.formatBusStop(stop.getStop().getCode(), stop.getStop().getAddress()));
                 dialogBuilder.setView(v);
                 dialogBuilder.setNegativeButton("CLOSE", null);
                 AlertDialog dialog = dialogBuilder.create();

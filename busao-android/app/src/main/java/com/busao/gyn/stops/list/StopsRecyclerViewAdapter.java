@@ -15,7 +15,7 @@ import com.busao.gyn.data.IBusStopDataSource;
 import com.busao.gyn.data.stop.BusStopWithLines;
 import com.busao.gyn.events.MapIconClickEvent;
 import com.busao.gyn.schedule.ScheduleActivity;
-import com.busao.gyn.util.BusStopUtils;
+import com.busao.gyn.util.FormatsUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -69,7 +69,7 @@ public class StopsRecyclerViewAdapter extends DefaultRecyclerViewAdapter<BusStop
             return;
         }
         final BusStopWithLines stop = mDataset.get(position);
-        String code = BusStopUtils.formatBusStop(mDataset.get(position).getStop().getCode());
+        String code = FormatsUtils.formatBusStop(mDataset.get(position).getStop().getCode());
 
         holder.stopNumber.setText(code);
         holder.streetName.setText(stop.getStop().getAddress());

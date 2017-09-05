@@ -12,10 +12,7 @@ import com.busao.gyn.R;
 import com.busao.gyn.data.IBusLineDataSource;
 import com.busao.gyn.data.line.BusLine;
 import com.busao.gyn.data.line.BusLinesWithStops;
-import com.busao.gyn.events.MapIconClickEvent;
-import com.busao.gyn.util.BusStopUtils;
-
-import org.greenrobot.eventbus.EventBus;
+import com.busao.gyn.util.FormatsUtils;
 
 import java.util.List;
 
@@ -61,7 +58,7 @@ public class LinesRecyclerViewAdapter extends DefaultRecyclerViewAdapter<BusLine
             return;
         }
         final BusLinesWithStops line = mDataset.get(position);
-        String code = BusStopUtils.formatBusStop(line.getLine().getCode());
+        String code = FormatsUtils.formatBusLine(line.getLine().getCode());
 
         holder.lineCodeTextView.setText(code);
 

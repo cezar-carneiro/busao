@@ -14,7 +14,7 @@ import com.busao.gyn.R;
 import com.busao.gyn.data.IBusStopDataSource;
 import com.busao.gyn.data.stop.BusStop;
 import com.busao.gyn.schedule.ScheduleActivity;
-import com.busao.gyn.util.BusStopUtils;
+import com.busao.gyn.util.FormatsUtils;
 import com.busao.gyn.util.TextViewUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +62,7 @@ public class StopsSearchResultsRecyclerViewAdapter extends DefaultRecyclerViewAd
             return;
         }
         final BusStop stop = mDataset.get(position);
-        String code = BusStopUtils.formatBusStop(mDataset.get(position).getCode());
+        String code = FormatsUtils.formatBusStop(mDataset.get(position).getCode());
 
         TextViewUtils.highlight(code, mQuery, holder.stopNumberSearchResult);
         TextViewUtils.highlight(stop.getAddress(), mQuery, holder.streetNameSearchResult);

@@ -11,9 +11,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
-import com.busao.gyn.data.stop.BusStop;
 import com.busao.gyn.data.stop.BusStopWithLines;
-import com.busao.gyn.util.BusStopUtils;
+import com.busao.gyn.util.FormatsUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -57,7 +56,7 @@ public class ScheduleActivity extends AppCompatActivity {
         TextView stopDescription = (TextView) findViewById(R.id.stopDescription);
         TextView linesAvailable = (TextView) findViewById(R.id.linesAvailable);
 
-        stopNumber.setText(BusStopUtils.formatBusStop(stop.getStop().getCode()));
+        stopNumber.setText(FormatsUtils.formatBusStop(stop.getStop().getCode()));
         districtName.setText(stop.getStop().getAddress());
         stopDescription.setText(stop.getStop().getReference());
         linesAvailable.setText(stop.getFormatedLines());
