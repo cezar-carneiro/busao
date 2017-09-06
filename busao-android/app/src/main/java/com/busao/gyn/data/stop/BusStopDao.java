@@ -30,7 +30,7 @@ public interface BusStopDao {
     @Query("SELECT * FROM pontos WHERE pontos.codigoPonto LIKE :input OR pontos.endereco LIKE :input OR pontos.pontoReferencia LIKE :input ")
     List<BusStop> searchByText(String input);//TODO: in the future we will paginate
 
-    @Query("SELECT * FROM pontos INNER JOIN pontoslinhas ON pontoslinhas.codigoPonto = pontos.codigoPonto WHERE pontoslinhas.codigoLinha = :line" )
+    @Query("SELECT pontos.id , pontos.codigoPonto , pontos.latitude , pontos.longitude , pontos.endereco , pontos.bairro , pontos.cidade , pontos.pontoReferencia , pontos.favorito FROM pontos INNER JOIN pontoslinhas ON pontoslinhas.codigoPonto = pontos.codigoPonto WHERE pontoslinhas.codigoLinha = :line" )
     List<BusStopWithLines> listByLine(Integer line);
 
 }

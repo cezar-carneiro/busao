@@ -68,15 +68,15 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     @Override
-    public void onStart(){
-        super.onStart();
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         EventBus.getDefault().register(this);
     }
 
     @Override
-    public void onStop(){
-        super.onStop();
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     /**
@@ -245,7 +245,6 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         }
         clearMarkers();
         if(stops != null && stops.length >= 1){
-            changeCamera(new LatLng(stops[0].getStop().getLatitude(), stops[0].getStop().getLongitude()), 20);
             for(BusStopWithLines stop: stops){
                 LatLng location = new LatLng(stop.getStop().getLatitude(), stop.getStop().getLongitude());
                 createMarker(String.valueOf(stop.getStop().getCode()),
@@ -259,12 +258,14 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
     @Subscribe
     public void onStopMapIconClick(StopMapIconClickEvent event) {
         createMarkersForStops(event.getStop());
+        changeCamera(new LatLng(event.getStop().getStop().getLatitude(), event.getStop().getStop().getLongitude()), 17);
     }
 
     @Subscribe
     public void onLineMapIconClick(LineMapIconClickEvent event) {
         List<BusStopWithLines> stops = mDataSource.listByLine(event.getLine().getLine().getCode());
         createMarkersForStops(stops.toArray(new BusStopWithLines[stops.size()]));
+        changeCamera(new LatLng(stops.get(0).getStop().getLatitude(), stops.get(0).getStop().getLongitude()), 13);
     }
 
 }

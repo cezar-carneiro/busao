@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -31,8 +32,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private TabFragment.ITabFragmentProvider mTabFragmentProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +75,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        mTabFragmentProvider = new BusStopTabProvider();
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(TabFragment.TABS_PROVIDER_ARG, (Serializable) mTabFragmentProvider);
+        bundle.putSerializable(TabFragment.TABS_PROVIDER_ARG, (Serializable) new BusaoTabPagerAdapter(fragmentManager));
         TabFragment tabFragment = (TabFragment) TabFragment.instantiate(this, TabFragment.class.getName(), bundle);
         tabFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.containerView, tabFragment).commit();
@@ -97,12 +94,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onStop() {
-        super.onStop();
         EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Subscribe
-    public void onMapIconClick(@Nullable StopMapIconClickEvent event) {
+    public void onStopMapIconClick(StopMapIconClickEvent event) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         TabFragment tabFragment = (TabFragment) fragmentManager.findFragmentById(R.id.containerView);
         tabFragment.switchToTab(2);
@@ -110,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Subscribe
     public void onLineMapIconClick(LineMapIconClickEvent event) {
-        onMapIconClick(null);
+        onStopMapIconClick(null);
     }
 
     @Override
@@ -173,11 +170,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_stops:
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TabFragment.TABS_PROVIDER_ARG, (Serializable) mTabFragmentProvider);
-                TabFragment tabFragment = (TabFragment) TabFragment.instantiate(this, TabFragment.class.getName(), bundle);
-                tabFragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.containerView, tabFragment).commitNow();
+
+                Fragment tabFragment = fragmentManager.findFragmentById(R.id.containerView);
+                if(tabFragment == null || !(tabFragment instanceof TabFragment)){
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(TabFragment.TABS_PROVIDER_ARG, (Serializable) new BusaoTabPagerAdapter(fragmentManager));
+                    tabFragment = (TabFragment) TabFragment.instantiate(this, TabFragment.class.getName(), bundle);
+                    tabFragment.setArguments(bundle);
+                }
+
+                fragmentTransaction.replace(R.id.containerView, tabFragment).commit();
                 setTitle("Pontos");
 
                 break;
