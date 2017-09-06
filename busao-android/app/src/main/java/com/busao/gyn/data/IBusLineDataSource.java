@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface IBusLineDataSource extends IDataSource<BusLine> {
 
+    int countFavorites();
     List<BusLinesWithStops> readFavorites();//TODO: in the future we will paginate
 
 }

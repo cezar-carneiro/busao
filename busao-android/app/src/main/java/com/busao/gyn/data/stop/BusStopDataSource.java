@@ -23,6 +23,11 @@ public class BusStopDataSource implements IBusStopDataSource {
     }
 
     @Override
+    public int countFavorites() {
+        return mBusStopDao.countFavorites();
+    }
+
+    @Override
     public void update(BusStop busStop) {
         mBusStopDao.update(busStop);
         EventBus.getDefault().post(new BusStopChanged(busStop));

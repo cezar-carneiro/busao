@@ -4,8 +4,6 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.busao.gyn.data.line.BusLinesWithStops;
-
 import java.util.List;
 
 /**
@@ -14,6 +12,9 @@ import java.util.List;
 
 @Dao
 public interface BusStopDao {
+
+    @Query("SELECT COUNT(favorito) AS c FROM pontos WHERE favorito = 1")
+    int countFavorites();
 
     @Update
     void update(BusStop busStop);

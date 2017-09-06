@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Cezar Carneiro"
+        android:text="Anônimo"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="3dp"
-            android:text="25 Pontos" />
+            android:text="0 Pontos" />
 
         <TextView
             android:id="@+id/totalLinesTextView"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="3dp"
-            android:text="14 Linhas" />
+            android:text="0 Linhas" />
     </LinearLayout>
 
 </LinearLayout>

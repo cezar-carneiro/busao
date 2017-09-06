@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -20,8 +19,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.busao.gyn.components.TabFragment;
+import com.busao.gyn.data.BusaoDatabase;
+import com.busao.gyn.data.IBusLineDataSource;
+import com.busao.gyn.data.IBusStopDataSource;
+import com.busao.gyn.data.line.BusLineDataSource;
+import com.busao.gyn.data.stop.BusStopDataSource;
+import com.busao.gyn.events.BusLineChanged;
+import com.busao.gyn.events.BusStopChanged;
 import com.busao.gyn.events.LineMapIconClickEvent;
 import com.busao.gyn.events.StopMapIconClickEvent;
 import com.busao.gyn.search.SearchActivity;
@@ -32,6 +39,11 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private IBusStopDataSource mStopsDataSource;
+    private IBusLineDataSource mLinesDataSource;
+    private TextView mTotalStopsTextView;
+    private TextView mTotalLinesTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
+        mTotalStopsTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.totalStopsTextView);
+        mTotalLinesTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.totalLinesTextView);
+        mStopsDataSource = new BusStopDataSource(BusaoDatabase.get(this).busStopDao());
+        mLinesDataSource = new BusLineDataSource(BusaoDatabase.get(this).busLineDao());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,6 +101,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.containerView, tabFragment).commit();
 
+        int stopsCount = mStopsDataSource.countFavorites();
+        mTotalStopsTextView.setText(stopsCount + " Pontos");
+        int linesCount = mLinesDataSource.countFavorites();
+        mTotalLinesTextView.setText(linesCount + " Linhas");
+
     }
 
     @Override
@@ -108,6 +130,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Subscribe
     public void onLineMapIconClick(LineMapIconClickEvent event) {
         onStopMapIconClick(null);
+    }
+
+    @Subscribe
+    public void onBusLineChanged(BusLineChanged event){
+        int count = mLinesDataSource.countFavorites();
+        mTotalLinesTextView.setText(count + " Linhas");
+    }
+
+    @Subscribe
+    public void onBusStopChanged(BusStopChanged event){
+        int count = mStopsDataSource.countFavorites();
+        mTotalStopsTextView.setText(count + " Pontos");
     }
 
     @Override

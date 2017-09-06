@@ -22,6 +22,11 @@ public class BusLineDataSource implements IBusLineDataSource {
     }
 
     @Override
+    public int countFavorites() {
+        return mBusLineDao.countFavorites();
+    }
+
+    @Override
     public List<BusLinesWithStops> readFavorites() {
         return mBusLineDao.readFavorites();
     }

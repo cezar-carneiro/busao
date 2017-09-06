@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface IBusStopDataSource extends IDataSource<BusStop> {
 
+    int countFavorites();
+
     List<BusStopWithLines> readFavorites();
 
     BusStopWithLines readBusStop(Integer id);

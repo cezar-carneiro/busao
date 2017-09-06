@@ -13,6 +13,9 @@ import java.util.List;
 @Dao
 public interface BusLineDao {
 
+    @Query("SELECT COUNT(favorita) AS c FROM linhas WHERE favorita = 1")
+    int countFavorites();
+
     @Update
     void update(BusLine busLine);
 
