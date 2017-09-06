@@ -234,7 +234,7 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, zoom), 2000, null);
     }
 
-    public void showLineStops(BusStopWithLines... stops){
+    public void createMarkersForStops(BusStopWithLines... stops){
         if(mGoogleMap == null){
             return;
         }
@@ -258,13 +258,13 @@ public class BusaoMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Subscribe
     public void onStopMapIconClick(StopMapIconClickEvent event) {
-        showLineStops(event.getStop());
+        createMarkersForStops(event.getStop());
     }
 
     @Subscribe
     public void onLineMapIconClick(LineMapIconClickEvent event) {
         List<BusStopWithLines> stops = mDataSource.listByLine(event.getLine().getLine().getCode());
-        showLineStops((BusStopWithLines[]) stops.toArray());
+        createMarkersForStops(stops.toArray(new BusStopWithLines[stops.size()]));
     }
 
 }

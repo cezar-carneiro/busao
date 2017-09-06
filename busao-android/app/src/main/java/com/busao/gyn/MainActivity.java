@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private TabFragment.ITabFragmentProvider mTabFragmentProvider;
 
-    private SearchActivity.SearchType mSearchType;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        mSearchType = SearchActivity.SearchType.STOP;
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -150,7 +147,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.search) {
             Intent intent = new Intent(this, SearchActivity.class);
 
-            intent.putExtra(SearchActivity.TYPE_KEY, mSearchType);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            TabFragment tabFragment = (TabFragment) fragmentManager.findFragmentById(R.id.containerView);
+            int currTab = tabFragment.getShowTabIndex();
+            if(currTab == 0){
+                intent.putExtra(SearchActivity.TYPE_KEY, SearchActivity.SearchType.STOP);
+            } else {
+                intent.putExtra(SearchActivity.TYPE_KEY, SearchActivity.SearchType.LINE);
+            }
+
             startActivity(intent);
             return true;
         }
@@ -175,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentTransaction.replace(R.id.containerView, tabFragment).commitNow();
                 setTitle("Pontos");
 
-                mSearchType = SearchActivity.SearchType.STOP;
                 break;
             case R.id.nav_remove_ads:
                 break;
