@@ -14,7 +14,7 @@ import com.busao.gyn.R;
 import com.busao.gyn.data.IBusStopDataSource;
 import com.busao.gyn.data.stop.BusStopWithLines;
 import com.busao.gyn.events.StopMapIconClickEvent;
-import com.busao.gyn.schedule.ScheduleActivity;
+import com.busao.gyn.forecast.ForecastActivity;
 import com.busao.gyn.util.FormatsUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -112,8 +112,8 @@ public class StopsRecyclerViewAdapter extends DefaultRecyclerViewAdapter<BusStop
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ScheduleActivity.class);
-                intent.putExtra("stop", stop);
+                Intent intent = new Intent(v.getContext(), ForecastActivity.class);
+                intent.putExtra("stop", stop.getStop());
                 v.getContext().startActivity(intent);
             }
         });

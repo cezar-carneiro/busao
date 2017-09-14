@@ -13,7 +13,7 @@ import com.busao.gyn.DefaultRecyclerViewAdapter;
 import com.busao.gyn.R;
 import com.busao.gyn.data.IBusStopDataSource;
 import com.busao.gyn.data.stop.BusStop;
-import com.busao.gyn.schedule.ScheduleActivity;
+import com.busao.gyn.forecast.ForecastActivity;
 import com.busao.gyn.util.FormatsUtils;
 import com.busao.gyn.util.TextViewUtils;
 
@@ -99,7 +99,7 @@ public class StopsSearchResultsRecyclerViewAdapter extends DefaultRecyclerViewAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ScheduleActivity.class);
+                Intent intent = new Intent(v.getContext(), ForecastActivity.class);
                 intent.putExtra("stop", stop);
                 v.getContext().startActivity(intent);
             }

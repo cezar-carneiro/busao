@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.busao.gyn.schedule.ScheduleActivity">
+    tools:context="com.busao.gyn.forecast.ForecastActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,32 +22,31 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/forecastSwipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="bottom">
+                android:gravity="bottom"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/stopNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8888"
                     android:fontFamily="sans-serif"
+                    android:text="8888"
                     android:textColor="#ff9100"
                     android:textSize="18dp"
                     android:textStyle="bold" />
@@ -71,42 +70,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:fontFamily="sans-serif"
                 android:ellipsize="marquee"
+                android:fontFamily="sans-serif"
                 android:maxLines="2"
                 android:text="Bus Stop description, if available"
                 android:textColor="#7e7e7e"
                 android:textSize="18dp" />
 
-            <TextView
-                android:id="@+id/linesAvailable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:fontFamily="sans-serif"
-                android:ellipsize="marquee"
-                android:maxLines="5"
-                android:text="888, 888, 888, 888"
-                android:textColor="#7e7e7e"
-                android:textSize="16dp" />
 
         </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/webViewContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_refresh" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.design.widget.CoordinatorLayout>
