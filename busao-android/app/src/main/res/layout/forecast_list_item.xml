@@ -1,0 +1,39 @@
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/forecastImageFavorite"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="4dp"
+        app:srcCompat="@drawable/ic_favorite_border" />
+
+    <TextView
+        android:id="@+id/forecastLineTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:padding="5dp"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/forecastNextTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:padding="5dp"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/forecastFollowingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:padding="5dp"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+</TableRow>

@@ -5,10 +5,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.busao.gyn.R;
 import com.busao.gyn.data.IForecastDataSource;
+import com.busao.gyn.data.forecast.Bus;
 import com.busao.gyn.data.forecast.ForecastDataSource;
 import com.busao.gyn.data.stop.BusStop;
 import com.busao.gyn.events.ForecastFetchedEvent;
@@ -52,12 +55,10 @@ public class ForecastActivity extends AppCompatActivity {
 
         mStop = (BusStop) getIntent().getSerializableExtra("stop");
 
-        TextView stopNumber = (TextView) findViewById(R.id.stopNumber);
-        TextView districtName = (TextView) findViewById(R.id.districtName);
+        TextView stopNumber = (TextView) findViewById(R.id.stopLabel);
         TextView stopDescription = (TextView) findViewById(R.id.stopDescription);
 
-        stopNumber.setText(FormatsUtils.formatBusStop(mStop.getCode()));
-        districtName.setText(mStop.getAddress());
+        stopNumber.setText(FormatsUtils.formatBusStop(mStop.getCode(), mStop.getAddress()));
         stopDescription.setText(mStop.getReference());
     }
 
@@ -92,8 +93,43 @@ public class ForecastActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void onForecastFetched(ForecastFetchedEvent forecastFetchedEvent){
+    public void onForecastFetched(final ForecastFetchedEvent forecastFetchedEvent){
         setRefreshingStatus(false);
+
+        final TableLayout tl = (TableLayout) findViewById(R.id.forecastTableLayout);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tl.removeAllViewsInLayout();
+
+                TableRow th = (TableRow) View.inflate(ForecastActivity.this, R.layout.forecast_list_header, null);
+                tl.addView(th);
+
+                for(final Bus bus: forecastFetchedEvent.getForecast().getData()){
+                    TableRow tr = (TableRow) View.inflate(ForecastActivity.this, R.layout.forecast_list_item, null);
+                    TextView line = (TextView) tr.findViewById(R.id.forecastLineTextView);
+                    TextView next = (TextView) tr.findViewById(R.id.forecastNextTextView);
+                    TextView following = (TextView) tr.findViewById(R.id.forecastFollowingTextView);
+
+                    line.setText(bus.getLine());
+                    if(bus.getNext() != null && bus.getNext().getMinutes() != null){
+                        next.setText(bus.getNext().getMinutes() + " min.");
+                    }else{
+                        next.setText("--");
+                    }
+
+                    if(bus.getFollowing() != null && bus.getFollowing().getMinutes() != null){
+                        following.setText(bus.getFollowing().getMinutes() + " min.");
+                    }else{
+                        following.setText("--");
+                    }
+
+                    tl.addView(tr);
+                }
+            }
+        });
+
     }
 
     @Subscribe

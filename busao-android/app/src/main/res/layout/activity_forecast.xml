@@ -25,51 +25,32 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/forecastSwipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/white"
         android:padding="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/stopLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/stopNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:text="8888"
-                    android:textColor="#ff9100"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/districtName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:fontFamily="sans-serif"
-                    android:maxLines="1"
-                    android:text="District Name"
-                    android:textColor="#7e7e7e"
-                    android:textSize="18dp"
-                    android:textStyle="normal" />
-
-            </LinearLayout>
+                android:ellipsize="marquee"
+                android:fontFamily="sans-serif"
+                android:maxLines="2"
+                android:text="8888 - Meu busao"
+                android:textColor="@color/colorAccent"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/stopDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:ellipsize="marquee"
                 android:fontFamily="sans-serif"
                 android:maxLines="2"
@@ -77,6 +58,14 @@
                 android:textColor="#7e7e7e"
                 android:textSize="18dp" />
 
+            <TableLayout
+                android:id="@+id/forecastTableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="30dp"
+                android:stretchColumns="1">
+
+            </TableLayout>
 
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
